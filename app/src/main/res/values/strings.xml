@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">Class Organizer</string>
+    <string name="edit_message">Enter a message</string>
+    <string name="button_send">Send</string>
+    <string name="username_label">Username</string>
+    <string name="password_label">Password</string>
+    <string name="sign_in_label">SIGN IN</string>
+    <string name="register_label">REGISTER</string>
+    <string name="login_form">Login form</string>
+    <string name="empty_string" />
+    <string name="name">Name</string>
+    <string name="lastname">Lastname</string>
+    <string name="email_address">E-mail address</string>
+    <string name="register_modal_success">Thank you! Your registration has been successfully processed!</string>
+    <string name="success">Success</string>
+    <string name="error">Error</string>
+    <string name="register_modal_error">Oops... Something went wrong. Check your Internet connection and try again.</string>
+    <string name="close">CLOSE</string>
 </resources>
