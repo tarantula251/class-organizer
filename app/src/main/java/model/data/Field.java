@@ -3,18 +3,18 @@ package model.data;
 public class Field
 {
     private int id;
-    private int cycle;
     private String name;
     private Faculty faculty;
     private Model model;
+    private Cycle cycle;
 
-    public Field(int id, String name, int cycle, Faculty faculty, Model model)
+    public Field(int id, String name, Faculty faculty, Model model, Cycle cycle)
     {
         this.id = id;
-        this.cycle = cycle;
         this.name = name;
         this.faculty = faculty;
         this.model = model;
+        this.cycle = cycle;
     }
 
     public int getId()
@@ -27,11 +27,6 @@ public class Field
         return name;
     }
 
-    public int getCycle()
-    {
-        return cycle;
-    }
-
     public Faculty getFaculty()
     {
         return faculty;
@@ -40,5 +35,10 @@ public class Field
     public Model getModel()
     {
         return model;
+    }
+
+    public Cycle getCycle()
+    {
+        return cycle;
     }
 }
