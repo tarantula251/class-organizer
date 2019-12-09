@@ -12,10 +12,16 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import model.builders.CycleJSONBuilder;
+import model.builders.FacultyJSONBuilder;
+import model.builders.FieldJSONBuilder;
+import model.builders.JSONDataBuilder;
+import model.builders.ModelJSONBuilder;
 import model.data.Cycle;
 import model.data.Faculty;
 import model.data.Field;
 import model.data.Model;
+import model.data.User;
 
 public class Server
 {
@@ -49,15 +55,14 @@ public class Server
     {
         return inputBuffer.readLine();
     }
-
-    public ArrayList<Faculty> getFaculties()
+    private <T> ArrayList<T> getDataArrayList(byte messageCode, String message, JSONDataBuilder<T> dataBuilder)
     {
-        ArrayList<Faculty> result = new ArrayList<>();
+        ArrayList<T> result = new ArrayList<>();
         String response;
 
         try
         {
-            sendMessage(facultyGetAllCode, "");
+            sendMessage(messageCode, message);
             response = readResponse();
 
         }
@@ -72,13 +77,12 @@ public class Server
 
         try
         {
-            JSONArray facultiesArray = new JSONArray(response);
-            for(int index = 0; index < facultiesArray.length(); ++index)
+            JSONArray jsonArray = new JSONArray(response);
+            for(int index = 0; index < jsonArray.length(); ++index)
             {
-                JSONObject facultyJsonObject = facultiesArray.getJSONObject(index);
+                JSONObject jsonObject = jsonArray.getJSONObject(index);
 
-                result.add(new Faculty(facultyJsonObject.getInt("id"),
-                        facultyJsonObject.getString("name")));
+                result.add(dataBuilder.buildData(jsonObject));
             }
         }
         catch(JSONException exception)
@@ -87,91 +91,30 @@ public class Server
         }
 
         return result;
+    }
+
+    public ArrayList<Faculty> getFaculties()
+    {
+        FacultyJSONBuilder facultyJSONBuilder = new FacultyJSONBuilder();
+        return getDataArrayList(facultyGetAllCode, "", facultyJSONBuilder);
     }
 
     public ArrayList<Model> getModels()
     {
-        ArrayList<Model> result = new ArrayList<>();
-        String response;
-
-        try
-        {
-            sendMessage(modelGetAllCode, "");
-            response = readResponse();
-
-        }
-        catch(IOException exception)
-        {
-            return null;
-        }
-        if(response == null)
-        {
-            return null;
-        }
-
-        try
-        {
-            JSONArray modelsArray = new JSONArray(response);
-            for(int index = 0; index < modelsArray.length(); ++index)
-            {
-                JSONObject modelJsonObject = modelsArray.getJSONObject(index);
-
-                result.add(new Model(modelJsonObject.getInt("id"),
-                        modelJsonObject.getString("name")));
-            }
-        }
-        catch(JSONException exception)
-        {
-            return null;
-        }
-
-        return result;
+        ModelJSONBuilder modelJSONBuilder = new ModelJSONBuilder();
+        return getDataArrayList(modelGetAllCode, "", modelJSONBuilder);
     }
 
     public ArrayList<Cycle> getCycles()
     {
-        ArrayList<Cycle> result = new ArrayList<>();
-        String response;
-
-        try
-        {
-            sendMessage(cycleGetAllCode, "");
-            response = readResponse();
-
-        }
-        catch(IOException exception)
-        {
-            return null;
-        }
-        if(response == null)
-        {
-            return null;
-        }
-
-        try
-        {
-            JSONArray cyclesArray = new JSONArray(response);
-            for(int index = 0; index < cyclesArray.length(); ++index)
-            {
-                JSONObject cycleJsonObject = cyclesArray.getJSONObject(index);
-
-                result.add(new Cycle(cycleJsonObject.getInt("id"),
-                        cycleJsonObject.getString("name")));
-            }
-        }
-        catch(JSONException exception)
-        {
-            return null;
-        }
-
-        return result;
+        CycleJSONBuilder cycleJSONBuilder = new CycleJSONBuilder();
+        return getDataArrayList(cycleGetAllCode, "", cycleJSONBuilder);
     }
 
     public ArrayList<Field> getFields(Faculty faculty, Model model, Cycle cycle)
     {
-        ArrayList<Field> result = new ArrayList<>();
         JSONObject requestData = new JSONObject();
-        String response;
+        FieldJSONBuilder fieldJSONBuilder = new FieldJSONBuilder(faculty, model, cycle);
 
         if(faculty == null || model == null || cycle == null) return null;
 
@@ -186,39 +129,6 @@ public class Server
             return null;
         }
 
-        try
-        {
-            sendMessage(fieldGetCode, requestData.toString());
-            response = readResponse();
-        }
-        catch(IOException exception)
-        {
-            return null;
-        }
-        if(response == null)
-        {
-            return null;
-        }
-
-        try
-        {
-            JSONArray fieldsArray = new JSONArray(response);
-            for(int index = 0; index < fieldsArray.length(); ++index)
-            {
-                JSONObject fieldJsonObject = fieldsArray.getJSONObject(index);
-
-                result.add(new Field(fieldJsonObject.getInt("id"),
-                        fieldJsonObject.getString("name"),
-                        faculty,
-                        model,
-                        cycle));
-            }
-        }
-        catch(JSONException exception)
-        {
-            return null;
-        }
-
-        return result;
+        return getDataArrayList(fieldGetCode, requestData.toString(), fieldJSONBuilder);
     }
 }
