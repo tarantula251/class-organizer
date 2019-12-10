@@ -6,4 +6,9 @@
     <color name="loginLblColor">#E5A770</color>
     <color name="labelColor">#E5A770</color>
     <color name="transparent_color">#00000000</color>
+    <color name="white_color">#FFFFFF</color>
+    <color name="message_box_gradient_start_color">#BCCC3333</color>
+    <color name="message_box_gradient_end_color">#CC3333</color>
+    <color name="shadow_color">#73000000</color>
+    <color name="list_item_background_color">#811F3F</color>
 </resources>

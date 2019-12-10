@@ -104,6 +104,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginEnd="24dp"
             android:background="@drawable/submit_button"
+            android:onClick="showMenu"
             android:text="@string/sign_in_label"
             android:textColor="#ffff"
             android:textSize="18sp"

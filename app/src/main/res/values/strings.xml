@@ -16,4 +16,18 @@
     <string name="error">Error</string>
     <string name="register_modal_error">Oops... Something went wrong. Check your Internet connection and try again.</string>
     <string name="close">CLOSE</string>
+    <string name="menu_manage_attendance">Manage Attendance</string>
+    <string name="menu_view_courses">View Courses</string>
+    <string name="menu_manage_results">Manage Results</string>
+    <string name="menu_my_account">My Account</string>
+    <string name="menu_logout">Logout</string>
+    <!-- Filtering courses -->
+    <string name="filter_courses_info">Filter out courses to display.</string>
+    <string name="cycle">Cycle</string>
+    <string name="model">Model</string>
+    <string name="faculty">Faculty</string>
+    <string name="field">Field</string>
+    <string name="course">Course</string>
+    <string name="type_of_class">Type of class</string>
+    <string name="open_list">Open list</string>
 </resources>

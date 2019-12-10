@@ -4,15 +4,133 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MenuActivity">
+    android:background="@drawable/default_background"
+    tools:context=".MenuActivity" >
 
-    <TextView
-        android:id="@+id/textView"
+    <ImageView
+        android:id="@+id/attendanceImageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="96dp"
+        android:onClick="showFilterCoursesAttendance"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/space2"
+        app:srcCompat="@drawable/menu_attendance" />
+
+    <Space
+        android:id="@+id/space2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="TextView"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/menu_attendance_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/menu_manage_attendance"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="@+id/attendanceImageView"
+        app:layout_constraintEnd_toEndOf="@+id/attendanceImageView"
+        app:layout_constraintStart_toStartOf="@+id/attendanceImageView" />
+
+    <ImageView
+        android:id="@+id/coursesIimageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="96dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/attendanceImageView"
+        app:layout_constraintTop_toBottomOf="@+id/space2"
+        app:srcCompat="@drawable/menu_courses" />
+
+    <TextView
+        android:id="@+id/menu_courses_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/menu_view_courses"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@+id/coursesIimageView"
+        app:layout_constraintEnd_toEndOf="@+id/coursesIimageView"
+        app:layout_constraintStart_toStartOf="@+id/coursesIimageView" />
+
+    <ImageView
+        android:id="@+id/resultsImageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/accountImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/attendanceImageView"
+        app:srcCompat="@drawable/menu_results" />
+
+    <TextView
+        android:id="@+id/menu_results_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/menu_manage_results"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@+id/resultsImageView"
+        app:layout_constraintEnd_toEndOf="@+id/resultsImageView"
+        app:layout_constraintStart_toStartOf="@+id/resultsImageView" />
+
+    <ImageView
+        android:id="@+id/accountImageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/menu_account" />
+
+    <TextView
+        android:id="@+id/menu_account_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/menu_my_account"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@+id/accountImageView"
+        app:layout_constraintEnd_toEndOf="@+id/accountImageView"
+        app:layout_constraintStart_toStartOf="@+id/accountImageView" />
+
+    <ImageView
+        android:id="@+id/logoutImageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/accountImageView"
+        app:srcCompat="@drawable/menu_logout" />
+
+    <TextView
+        android:id="@+id/menu_logout_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/menu_logout"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@+id/logoutImageView"
+        app:layout_constraintEnd_toEndOf="@+id/logoutImageView"
+        app:layout_constraintStart_toStartOf="@+id/logoutImageView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

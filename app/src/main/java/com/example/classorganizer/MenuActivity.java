@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 public class MenuActivity extends AppCompatActivity {
@@ -12,13 +13,10 @@ public class MenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+    }
 
-        // Get the Intent that started this activity and extract the string
-//        Intent intent = getIntent();
-//        String message = intent.getStringExtra(LoginActivity.EXTRA_MESSAGE);
-//
-//        // Capture the layout's TextView and set the string as its text
-//        TextView textView = findViewById(R.id.textView);
-//        textView.setText(message);
+    public void showFilterCoursesAttendance(View view) {
+        Intent intent = new Intent(this, FilterCoursesAttendanceActivity.class);
+        startActivity(intent);
     }
 }
