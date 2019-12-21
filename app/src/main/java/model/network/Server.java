@@ -17,6 +17,7 @@ import model.builders.FacultyJSONBuilder;
 import model.builders.FieldJSONBuilder;
 import model.builders.JSONDataBuilder;
 import model.builders.ModelJSONBuilder;
+import model.builders.UserJSONBuilder;
 import model.data.Cycle;
 import model.data.Faculty;
 import model.data.Field;
@@ -35,6 +36,7 @@ public class Server
     private static final byte facultyGetAllCode = (byte)200;
     private static final byte modelGetAllCode = (byte)201;
     private static final byte cycleGetAllCode = (byte)202;
+    private static final byte userGetAllCode = (byte)203;
 
     public Server(String ipAddress, int port) throws IOException
     {
@@ -130,5 +132,11 @@ public class Server
         }
 
         return getDataArrayList(fieldGetCode, requestData.toString(), fieldJSONBuilder);
+    }
+
+    public ArrayList<User> getUsers()
+    {
+        UserJSONBuilder userJSONBuilder = new UserJSONBuilder();
+        return getDataArrayList(userGetAllCode, "", userJSONBuilder);
     }
 }
