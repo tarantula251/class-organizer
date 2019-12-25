@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -16,7 +15,7 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     public void showFilterCoursesAttendance(View view) {
-        Intent intent = new Intent(this, FilterCoursesAttendanceActivity.class);
+        Intent intent = new Intent(this, AttendanceActivity.class);
         startActivity(intent);
     }
 }

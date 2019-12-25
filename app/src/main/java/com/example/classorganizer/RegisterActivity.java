@@ -8,6 +8,7 @@ import android.view.WindowManager.LayoutParams;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -39,5 +40,10 @@ public class RegisterActivity extends AppCompatActivity {
         alertDialog.getWindow().setLayout(950, LayoutParams.WRAP_CONTENT);
         TextView textView = alertDialog.findViewById(android.R.id.message);
         textView.setTextSize(26);
+        Button neutralButton = alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL);
+        neutralButton.setBackground(getDrawable(R.drawable.cancel_small_button));
+        neutralButton.setX(-225);
+        neutralButton.setY(50);
+
     }
 }

@@ -2,20 +2,29 @@
     <string name="app_name">Class Organizer</string>
     <string name="edit_message">Enter a message</string>
     <string name="button_send">Send</string>
+    <string name="empty_string" />
+    <!-- Login and registration -->
     <string name="username_label">Username</string>
     <string name="password_label">Password</string>
     <string name="sign_in_label">SIGN IN</string>
     <string name="register_label">REGISTER</string>
     <string name="login_form">Login form</string>
-    <string name="empty_string" />
     <string name="name">Name</string>
     <string name="lastname">Lastname</string>
     <string name="email_address">E-mail address</string>
-    <string name="register_modal_success">Thank you! Your registration has been successfully processed!</string>
+    <!-- Modals -->
     <string name="success">Success</string>
     <string name="error">Error</string>
+    <string name="cancel">Cancel</string>
+    <string name="submit">Submit</string>
+    <string name="close">Close</string>
+    <string name="show_more">Show more</string>
+    <string name="register_modal_success">Thank you! Your registration has been successfully processed!</string>
     <string name="register_modal_error">Oops... Something went wrong. Check your Internet connection and try again.</string>
-    <string name="close">CLOSE</string>
+    <string name="attendance_list_success">Attendance list for selected class has just opened!</string>
+    <string name="attendance_list_error">Oops... Something went wrong. Check selected fields and try again.</string>
+    <string name="attendance_list_closed">The attendance list for your class has been closed. Click below to see the details.</string>
+    <!-- Menu -->
     <string name="menu_manage_attendance">Manage Attendance</string>
     <string name="menu_view_courses">View Courses</string>
     <string name="menu_manage_results">Manage Results</string>
@@ -30,4 +39,8 @@
     <string name="course">Course</string>
     <string name="type_of_class">Type of class</string>
     <string name="open_list">Open list</string>
+    <!-- Attendance list previe -->
+    <string name="student_id">Student Id</string>
+    <string name="student_name">Student Name</string>
+    <string name="check_in_time">Check-in Time</string>
 </resources>

@@ -11,4 +11,5 @@
     <color name="message_box_gradient_end_color">#CC3333</color>
     <color name="shadow_color">#73000000</color>
     <color name="list_item_background_color">#811F3F</color>
+    <color name="important_color">#ED145B</color>
 </resources>
