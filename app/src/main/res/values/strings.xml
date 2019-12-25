@@ -30,16 +30,19 @@
     <string name="menu_manage_results">Manage Results</string>
     <string name="menu_my_account">My Account</string>
     <string name="menu_logout">Logout</string>
-    <!-- Filtering courses -->
+    <!-- Courses -->
     <string name="filter_courses_info">Filter out courses to display.</string>
+    <string name="view_courses_info">View all the courses you run.</string>
     <string name="cycle">Cycle</string>
     <string name="model">Model</string>
     <string name="faculty">Faculty</string>
     <string name="field">Field</string>
     <string name="course">Course</string>
     <string name="type_of_class">Type of class</string>
+    <string name="supervisor">Supervisor</string>
+    <string name="classes">Classes</string>
     <string name="open_list">Open list</string>
-    <!-- Attendance list previe -->
+    <!-- Attendance list preview -->
     <string name="student_id">Student Id</string>
     <string name="student_name">Student Name</string>
     <string name="check_in_time">Check-in Time</string>

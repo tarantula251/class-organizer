@@ -5,12 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ExpandableListView;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.FragmentManager;
@@ -25,7 +23,6 @@ public class AttendanceActivity extends AppCompatActivity {
     private FilterCoursesAdapter listAdapter;
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listHash;
-    private FrameLayout fragmentContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +33,6 @@ public class AttendanceActivity extends AppCompatActivity {
         initListData();
         listAdapter = new FilterCoursesAdapter(this, listDataHeader, listHash);
         listView.setAdapter(listAdapter);
-
-        fragmentContainer = findViewById(R.id.fragmentContainer);
     }
 
     private void initListData() {

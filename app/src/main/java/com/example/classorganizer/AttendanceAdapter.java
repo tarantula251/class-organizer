@@ -46,7 +46,7 @@ public class AttendanceAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        LayoutInflater inflater =  activity.getLayoutInflater();
+        LayoutInflater inflater = activity.getLayoutInflater();
 
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.attendance_item, null);
