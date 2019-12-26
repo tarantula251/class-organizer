@@ -24,6 +24,9 @@
     <string name="attendance_list_success">Attendance list for selected class has just opened!</string>
     <string name="attendance_list_error">Oops... Something went wrong. Check selected fields and try again.</string>
     <string name="attendance_list_closed">The attendance list for your class has been closed. Click below to see the details.</string>
+    <string name="logout_question">Are you sure you want to log out?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
     <!-- Menu -->
     <string name="menu_manage_attendance">Manage Attendance</string>
     <string name="menu_view_courses">View Courses</string>
