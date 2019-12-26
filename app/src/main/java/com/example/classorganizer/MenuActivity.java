@@ -1,11 +1,9 @@
 package com.example.classorganizer;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 public class MenuActivity extends AppCompatActivity {
@@ -23,6 +21,11 @@ public class MenuActivity extends AppCompatActivity {
 
     public void showViewCourses(View view) {
         Intent intent = new Intent(this, ViewCoursesActivity.class);
+        startActivity(intent);
+    }
+
+    public void showAccount(View view) {
+        Intent intent = new Intent(this, AccountActivity.class);
         startActivity(intent);
     }
 }
