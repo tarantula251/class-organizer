@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/assignedStudents"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="15dp"
+    android:background="@color/list_item_background_color"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:weightSum="100">
+
+    <TextView
+        android:id="@+id/columnId"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="25"
+        android:gravity="start"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:textAlignment="textStart"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/columnName"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="45"
+        android:gravity="start"
+        android:textAlignment="textStart"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/columnAdd"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="15"
+        android:gravity="start"
+        android:text="@string/add"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="@color/labelColor"
+        android:textSize="10sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/columnEdit"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="15"
+        android:gravity="start"
+        android:text="@string/edit"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="@color/labelColor"
+        android:textSize="10sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

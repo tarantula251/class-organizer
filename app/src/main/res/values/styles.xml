@@ -3,8 +3,8 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">#652025</item>
+        <item name="colorPrimaryDark">#4C4C4C</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="buttonStyle">@style/buttonStyle</item>
         <item name="android:textColor">@color/white_color</item>
@@ -33,6 +33,26 @@
         <item name="android:background">@drawable/default_button</item>
         <item name="android:width">85dp</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <style name="modalPickerStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:background">@drawable/popup_background</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:windowTitleStyle">@style/modalPickerTitleStyle</item>
+        <item name="android:buttonStyle">@style/buttonStyle</item>
+        <item name="android:windowBackground">@color/transparent_color</item>
+        <item name="android:gravity">top|center</item>
+        <item name="android:useDefaultMargins">true</item>
+        <item name="android:textColorSecondary">#FFFFFF</item>
+        <item name="textColorAlertDialogListItem">#FFFFFF</item>
+        <item name="colorAccent">@color/loginLblColor</item>
+    </style>
+
+    <style name="modalPickerTitleStyle">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+        <item name="android:textSize">26sp</item>
     </style>
 
 </resources>

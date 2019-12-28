@@ -1,14 +1,23 @@
 package com.example.classorganizer;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -73,7 +82,11 @@ public class ViewCoursesAdapter extends RecyclerView.Adapter<ViewCoursesAdapter.
             }
         }
 
-        CourseViewHolder holder = new CourseViewHolder(view, classesCount);
+        boolean allowClassPickerModal = false;
+        if (this.context.toString().contains("ManageResultsActivity")) {
+            allowClassPickerModal = true;
+        }
+        CourseViewHolder holder = new CourseViewHolder(view, context, classesCount, allowClassPickerModal);
         return holder;
     }
 
@@ -115,13 +128,15 @@ public class ViewCoursesAdapter extends RecyclerView.Adapter<ViewCoursesAdapter.
         return data.size();
     }
 
-    public static class CourseViewHolder extends RecyclerView.ViewHolder {
-        TextView textCourseName, textCycle, textModel, textFaculty, textField, textSupervisor;
-        ArrayList<TextView> textClasses;
-        int classesSize;
+    public static class CourseViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        private TextView textCourseName, textCycle, textModel, textFaculty, textField, textSupervisor;
+        private ArrayList<TextView> textClasses;
+        private int classesSize;
+        private Context contextInner;
 
-        public CourseViewHolder(@NonNull View itemView, int classesSize) {
+        public CourseViewHolder(@NonNull View itemView, Context context, int classesSize, boolean isModalAllowed) {
             super(itemView);
+            contextInner = context;
             textCourseName = itemView.findViewById(R.id.courseName);
             textCycle = itemView.findViewById(R.id.cycleValue);
             textModel = itemView.findViewById(R.id.modelValue);
@@ -136,6 +151,86 @@ public class ViewCoursesAdapter extends RecyclerView.Adapter<ViewCoursesAdapter.
                     textClasses.add((TextView) itemView.findViewWithTag("classesValue" + i));
                 }
             }
+            if (isModalAllowed) {
+                itemView.setOnClickListener(this);
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            //prepare data to pass on modal submit
+            final HashMap<String, String> selectedClass = new HashMap<>();
+            TextView courseView = v.findViewById(R.id.courseName);
+            TextView cycleView = v.findViewById(R.id.cycleValue);
+            TextView modelView = v.findViewById(R.id.modelValue);
+            TextView facultyView = v.findViewById(R.id.facultyValue);
+            TextView fieldView = v.findViewById(R.id.fieldValue);
+            TextView supervisorView = v.findViewById(R.id.supervisorValue);
+            selectedClass.put(contextInner.getString(R.string.course), (String) courseView.getText());
+            selectedClass.put(contextInner.getString(R.string.cycle), (String) cycleView.getText());
+            selectedClass.put(contextInner.getString(R.string.model), (String) modelView.getText());
+            selectedClass.put(contextInner.getString(R.string.faculty), (String) facultyView.getText());
+            selectedClass.put(contextInner.getString(R.string.field), (String) fieldView.getText());
+            selectedClass.put(contextInner.getString(R.string.supervisor), (String) supervisorView.getText());
+
+            //prepare classes list for modal
+            ArrayList<TextView> classesTextViews = new ArrayList<>();
+            if (classesSize > 0) {
+                for (int i = 0; i < classesSize; i++) {
+                    classesTextViews.add((TextView) v.findViewWithTag("classesValue" + i));
+                }
+            }
+            ArrayList<String> classesValues = new ArrayList<>();
+            for (TextView textView : classesTextViews) {
+                classesValues.add((String) textView.getText());
+            }
+            String[] singleChoiceItems = new String[classesValues.size()];
+            singleChoiceItems = classesValues.toArray(singleChoiceItems);
+            final String[] classesArray = singleChoiceItems;
+            final int itemSelected = 0;
+            //save initial class item in case user won't click anything
+            selectedClass.put(contextInner.getString(R.string.classes), classesArray[itemSelected]);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(contextInner, R.style.modalPickerStyle);
+            builder.setTitle(contextInner.getString(R.string.pick_classes_modal));
+            builder.setSingleChoiceItems(singleChoiceItems, itemSelected, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int selectedIndex) {
+                    selectedClass.put(contextInner.getString(R.string.classes), classesArray[selectedIndex]);
+                }
+            });
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
+            builder.setPositiveButton(R.string.submit, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    Intent intent = new Intent(contextInner, ShowAssignedStudentsActivity.class);
+                    Bundle extras = new Bundle();
+                    extras.putSerializable("selectedClass", selectedClass);
+                    intent.putExtras(extras);
+                    contextInner.startActivity(intent);
+                    dialog.cancel();
+                }
+            });
+            builder.setCancelable(true);
+
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+            alertDialog.getWindow().setLayout(950, WindowManager.LayoutParams.WRAP_CONTENT);
+
+            //Change style of buttons
+            Button positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+            positiveButton.setBackground(contextInner.getDrawable(R.drawable.default_small_button));
+            positiveButton.setX(-450);
+            positiveButton.setY(100);
+
+            Button negativeButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+            negativeButton.setBackground(contextInner.getDrawable(R.drawable.cancel_small_button));
+            negativeButton.setX(0);
+            negativeButton.setY(-50);
+
         }
     }
 }

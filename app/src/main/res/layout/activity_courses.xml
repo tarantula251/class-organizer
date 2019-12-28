@@ -26,7 +26,7 @@
             app:srcCompat="@drawable/infobox_background" />
 
         <TextView
-            android:id="@+id/filterCoursesInfo"
+            android:id="@+id/viewCoursesInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/imageView"

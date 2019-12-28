@@ -49,4 +49,12 @@
     <string name="student_id">Student Id</string>
     <string name="student_name">Student Name</string>
     <string name="check_in_time">Check-in Time</string>
+    <!-- Results -->
+    <string name="tap_course_info">Tap a course to manage results.</string>
+    <string name="pick_classes_modal">Pick type of classes:</string>
+    <string name="info_box_manage">Manage Results For Course:</string>
+    <string name="info_box_model">Model:</string>
+    <string name="info_box_type">Type of Classes:</string>
+    <string name="add">Add</string>
+    <string name="edit">Edit</string>
 </resources>

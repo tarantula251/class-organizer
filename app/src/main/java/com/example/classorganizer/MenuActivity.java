@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -74,5 +73,10 @@ public class MenuActivity extends AppCompatActivity {
         Intent intent = new Intent(MenuActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void showManageResults(View view) {
+        Intent intent = new Intent(this, ManageResultsActivity.class);
+        startActivity(intent);
     }
 }
