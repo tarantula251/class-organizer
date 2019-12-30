@@ -35,6 +35,7 @@
         android:layout_height="fill_parent"
         android:layout_weight="15"
         android:gravity="start"
+        android:onClick="showAddResultModal"
         android:text="@string/add"
         android:textAlignment="center"
         android:textAllCaps="true"

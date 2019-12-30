@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="60px"></corners>
+            <size android:height="400px" android:width="500px"/>
+            <solid android:color="@color/add_result_modal_color"/>
+        </shape>
+    </item>
+</layer-list>

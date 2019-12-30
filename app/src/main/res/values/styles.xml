@@ -55,4 +55,18 @@
         <item name="android:textSize">26sp</item>
     </style>
 
+    <style name="modalAddResultStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:background">@drawable/add_result_background</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:windowTitleStyle">@style/modalPickerTitleStyle</item>
+        <item name="android:buttonStyle">@style/buttonStyle</item>
+        <item name="android:windowBackground">@color/transparent_color</item>
+        <item name="android:gravity">top|center</item>
+        <item name="android:useDefaultMargins">true</item>
+        <item name="android:textColorSecondary">#FFFFFF</item>
+        <item name="textColorAlertDialogListItem">#FFFFFF</item>
+        <item name="colorAccent">@color/loginLblColor</item>
+    </style>
+
 </resources>
