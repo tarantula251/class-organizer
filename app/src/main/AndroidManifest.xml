@@ -10,6 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ViewResultsActivity"
+            android:parentActivityName=".ManageResultsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ManageResultsActivity" />
+        </activity>
+        <activity
             android:name=".ShowAssignedStudentsActivity"
             android:parentActivityName=".ManageResultsActivity">
             <meta-data

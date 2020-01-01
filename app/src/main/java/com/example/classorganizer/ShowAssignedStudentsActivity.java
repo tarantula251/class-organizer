@@ -1,6 +1,7 @@
 package com.example.classorganizer;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -14,6 +15,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,9 +29,14 @@ import java.util.HashMap;
 
 public class ShowAssignedStudentsActivity extends AppCompatActivity {
     private HashMap<String, String> classData;
+    private HashMap<String, String> studentData;
     private ArrayList<HashMap<String, String>> list;
     private ListView listView;
+    private EditText resultBox;
+    private TextView studentIdTextView;
+    private TextView studentNameTextView;
     private int maxLengthDescriptionText = 250;
+    private int maxLengthResultText = 3;
     public static final String FIRST_COLUMN = "Column 1";
     public static final String SECOND_COLUMN = "Column 2";
 
@@ -44,6 +53,7 @@ public class ShowAssignedStudentsActivity extends AppCompatActivity {
         populateList();
         AssignedStudentsAdapter adapter = new AssignedStudentsAdapter(this, list);
         listView.setAdapter(adapter);
+        studentData = new HashMap<>();
     }
 
     private void fillInfoBox() {
@@ -128,7 +138,15 @@ public class ShowAssignedStudentsActivity extends AppCompatActivity {
     public void showAddResultModal(View view) {
         view.startAnimation(AnimationUtils.loadAnimation(this, R.anim.button_click));
         LinearLayout parentRow = (LinearLayout) view.getParent();
-        final TextView studentIdTextView = (TextView) parentRow.getChildAt(0);
+        studentIdTextView = (TextView) parentRow.getChildAt(0);
+        studentNameTextView = (TextView) parentRow.getChildAt(1);
+        if (studentData.isEmpty() ||
+                (!studentData.isEmpty() &&
+                        !studentData.get(getResources().getString(R.string.student_id)).equalsIgnoreCase(studentIdTextView.getText().toString()) &&
+                        !studentData.get(getResources().getString(R.string.student_name)).equalsIgnoreCase(studentNameTextView.getText().toString()))) {
+            studentData.put(getResources().getString(R.string.student_id), studentIdTextView.getText().toString());
+            studentData.put(getResources().getString(R.string.student_name), studentNameTextView.getText().toString());
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(ShowAssignedStudentsActivity.this, R.style.modalAddResultStyle);
         LinearLayout modalLayout = new LinearLayout(this);
@@ -136,22 +154,24 @@ public class ShowAssignedStudentsActivity extends AppCompatActivity {
         modalLayout.setOrientation(LinearLayout.VERTICAL);
 
         final TextView resultLabel = new TextView(this);
-        resultLabel.setText(getResources().getText(R.string.result));
+        resultLabel.setText(getResources().getText(R.string.result_colon));
         resultLabel.setTextColor(getResources().getColor(R.color.important_color));
         resultLabel.setTypeface(null, Typeface.BOLD);
         modalLayout.addView(resultLabel);
 
-        final EditText resultBox = new EditText(this);
+        resultBox = new EditText(this);
+        resultBox.setTag("resultBox");
         resultBox.setHint("Result");
-        resultBox.setTextColor(getResources().getColor(R.color.add_result_text_color));
+        resultBox.setTextColor(getResources().getColor(R.color.transparent_color));
         resultBox.setPadding(0, 15, 10, 25);
         resultBox.setMaxLines(1);
         resultBox.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        resultBox.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(1)});
+        InputFilter lengthInputFilter = new InputFilter.LengthFilter(maxLengthResultText);
+        resultBox.setFilters(new InputFilter[] {lengthInputFilter, new DecimalDigitsInputFilter()});
         modalLayout.addView(resultBox);
 
         final TextView descriptionLabel = new TextView(this);
-        descriptionLabel.setText(getResources().getText(R.string.description));
+        descriptionLabel.setText(getResources().getText(R.string.description_colon));
         descriptionLabel.setTextColor(getResources().getColor(R.color.important_color));
         descriptionLabel.setTypeface(null, Typeface.BOLD);
         modalLayout.addView(descriptionLabel);
@@ -166,9 +186,11 @@ public class ShowAssignedStudentsActivity extends AppCompatActivity {
 
         builder.setView(modalLayout);
 
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-YYYY HH:mm:ss");
+
         builder.setNeutralButton(R.string.add_result, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                performAddResult(studentIdTextView.getText().toString(), resultBox.getText().toString(), descriptionBox.getText().toString());
+                performAddResult(studentData.get(getResources().getString(R.string.student_id)), studentData.get(getResources().getString(R.string.student_name)), resultBox.getText().toString(), descriptionBox.getText().toString(), dateFormat.format(new Date()));
                 dialog.cancel();
             }
         });
@@ -184,22 +206,44 @@ public class ShowAssignedStudentsActivity extends AppCompatActivity {
         neutralButton.setY(150);
     }
 
-    private void performAddResult(String studentId, String result, String description) {
+    private void performAddResult(String studentId, String studentName, String result, String description, String dateAdded) {
+    }
 
+    public void showResultsList(View view) {
+        LinearLayout parentRow = (LinearLayout) view.getParent();
+        studentIdTextView = (TextView) parentRow.getChildAt(0);
+        studentNameTextView = (TextView) parentRow.getChildAt(1);
+        if (studentData.isEmpty() ||
+                (!studentData.isEmpty() &&
+                        !studentData.get(getResources().getString(R.string.student_id)).equalsIgnoreCase(studentIdTextView.getText().toString()) &&
+                        !studentData.get(getResources().getString(R.string.student_name)).equalsIgnoreCase(studentNameTextView.getText().toString()))) {
+            studentData.put(getResources().getString(R.string.student_id), studentIdTextView.getText().toString());
+            studentData.put(getResources().getString(R.string.student_name), studentNameTextView.getText().toString());
+        }
+
+        Intent intent = new Intent(this, ViewResultsActivity.class);
+        Bundle extras = new Bundle();
+        extras.putSerializable("selectedClass", classData);
+        extras.putSerializable("selectedStudent", studentData);
+        intent.putExtras(extras);
+        startActivity(intent);
     }
 
     private class DecimalDigitsInputFilter implements InputFilter {
         Pattern mPattern;
 
-        public DecimalDigitsInputFilter(int digitsAfterZero) {
-            mPattern = Pattern.compile("[1-6]{1}+((\\.[0-9]{0," + (digitsAfterZero-1) + "})?)||(\\.)?");
+        public DecimalDigitsInputFilter() {
+            mPattern = Pattern.compile("[1-6]?(\\.)?[0|5]?");
         }
 
         @Override
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
             Matcher matcherDot = mPattern.matcher(dest);
-            if(!matcherDot.matches())
+            if(!matcherDot.matches()) {
+                resultBox.setTextColor(getResources().getColor(R.color.error));
                 return "";
+            }
+            resultBox.setTextColor(getResources().getColor(R.color.add_result_text_color));
             return null;
         }
     }

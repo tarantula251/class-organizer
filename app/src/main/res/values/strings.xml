@@ -57,7 +57,12 @@
     <string name="info_box_type">Type of Classes:</string>
     <string name="add">Add</string>
     <string name="edit">Edit</string>
+    <string name="save">Save</string>
     <string name="add_result">Add result</string>
-    <string name="result">Result:</string>
-    <string name="description">Description:</string>
+    <string name="result_colon">Result:</string>
+    <string name="description_colon">Description:</string>
+    <string name="added_colon">Added on:</string>
+    <string name="result">Result</string>
+    <string name="description">Description</string>
+    <string name="added_date">Date</string>
 </resources>

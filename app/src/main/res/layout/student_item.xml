@@ -49,6 +49,7 @@
         android:layout_height="fill_parent"
         android:layout_weight="15"
         android:gravity="start"
+        android:onClick="showResultsList"
         android:text="@string/edit"
         android:textAlignment="center"
         android:textAllCaps="true"

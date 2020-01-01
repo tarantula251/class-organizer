@@ -14,4 +14,6 @@
     <color name="important_color">#ED145B</color>
     <color name="add_result_modal_color">#EACAAD</color>
     <color name="add_result_text_color">#8B344D</color>
+    <color name="error">#DA2214</color>
+    <color name="add_result_label_color">#B42B58</color>
 </resources>
