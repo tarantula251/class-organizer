@@ -4,8 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
-import android.widget.TextView;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,8 +28,7 @@ public class ViewResultsAdapter extends RecyclerView.Adapter<ViewResultsAdapter.
     @Override
     public ResultViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = layoutInflater.inflate(R.layout.result_item, parent, false);
-        GridLayout gridLayout = view.findViewById(R.id.resultGrid);
-        ViewResultsAdapter.ResultViewHolder holder = new ViewResultsAdapter.ResultViewHolder(view, context);
+        ViewResultsAdapter.ResultViewHolder holder = new ViewResultsAdapter.ResultViewHolder(view);
         return holder;
     }
 
@@ -53,21 +51,14 @@ public class ViewResultsAdapter extends RecyclerView.Adapter<ViewResultsAdapter.
         return data.size();
     }
 
-    public static class ResultViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        private TextView textResult, textDate, textDescription;
-        private Context contextInner;
+    public static class ResultViewHolder extends RecyclerView.ViewHolder{
+        private EditText textResult, textDate, textDescription;
 
-        public ResultViewHolder(@NonNull View itemView, Context context) {
+        public ResultViewHolder(@NonNull View itemView) {
             super(itemView);
-            contextInner = context;
             textResult = itemView.findViewById(R.id.resultValue);
             textDate = itemView.findViewById(R.id.dateValue);
             textDescription = itemView.findViewById(R.id.descriptionValue);
-        }
-
-        @Override
-        public void onClick(View v) {
-
         }
     }
 }
