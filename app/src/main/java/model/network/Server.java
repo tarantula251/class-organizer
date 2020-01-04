@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import model.builders.CycleJSONBuilder;
@@ -176,8 +178,9 @@ public class Server
         String response;
         try
         {
+            String encryptedPassword = new String(MessageDigest.getInstance("MD5").digest(password.getBytes()));
             requestData.put("email", email);
-            requestData.put("password", password);
+            requestData.put("password", encryptedPassword);
             sendMessage(authorizeCode, requestData.toString());
             response = readResponse();
             userJson = new JSONArray(response).getJSONObject(0);
@@ -186,7 +189,7 @@ public class Server
         {
             throw new ServerException(e.hashCode(), "JSON couldn't be parsed");
         }
-        catch(IOException e)
+        catch(IOException | NoSuchAlgorithmException e)
         {
             throw new ServerException(e.hashCode(), e.getMessage());
         }
