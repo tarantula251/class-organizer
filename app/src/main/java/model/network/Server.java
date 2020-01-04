@@ -26,19 +26,27 @@ import model.data.User;
 
 public class Server
 {
-    private Socket socket;
+    private Socket socket = null;
     private BufferedReader inputBuffer;
     private DataOutputStream dataOutputStream;
     private PrintWriter outputWriter;
+    private String ipAddress;
+    private int port;
 
     //Message codes
+    private static final byte authorizeCode = (byte)2;
     private static final byte fieldGetCode = (byte)100;
     private static final byte facultyGetAllCode = (byte)200;
     private static final byte modelGetAllCode = (byte)201;
     private static final byte cycleGetAllCode = (byte)202;
-    private static final byte userGetAllCode = (byte)203;
 
-    public Server(String ipAddress, int port) throws IOException
+    public Server(String ipAddress, int port)
+    {
+        this.ipAddress = ipAddress;
+        this.port = port;
+    }
+
+    public void connect() throws IOException
     {
         socket = new Socket(ipAddress, port);
         inputBuffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -57,6 +65,7 @@ public class Server
     {
         return inputBuffer.readLine();
     }
+
     private <T> ArrayList<T> getDataArrayList(byte messageCode, String message, JSONDataBuilder<T> dataBuilder)
     {
         ArrayList<T> result = new ArrayList<>();
@@ -134,9 +143,47 @@ public class Server
         return getDataArrayList(fieldGetCode, requestData.toString(), fieldJSONBuilder);
     }
 
-    public ArrayList<User> getUsers()
+    public User authorize(String email, String password) throws ServerException
     {
+        User user;
+        JSONObject requestData = new JSONObject();
+        JSONObject userJson;
+        String response;
+        try
+        {
+            requestData.put("email", email);
+            requestData.put("password", password);
+            sendMessage(authorizeCode, requestData.toString());
+            response = readResponse();
+            userJson = new JSONArray(response).getJSONObject(0);
+        }
+        catch(JSONException e)
+        {
+            throw new ServerException(e.hashCode(), "JSON couldn't be parsed");
+        }
+        catch(IOException e)
+        {
+            throw new ServerException(e.hashCode(), e.getMessage());
+        }
+
         UserJSONBuilder userJSONBuilder = new UserJSONBuilder();
-        return getDataArrayList(userGetAllCode, "", userJSONBuilder);
+        try
+        {
+            user = userJSONBuilder.buildData(userJson);
+        }
+        catch(JSONException e)
+        {
+            ServerExceptionJSONBuilder serverExceptionJSONBuilder = new ServerExceptionJSONBuilder();
+            try
+            {
+                throw serverExceptionJSONBuilder.buildData(userJson);
+            }
+            catch(JSONException ex)
+            {
+                throw new ServerException(ex.hashCode(), ex.getMessage());
+            }
+        }
+
+        return user;
     }
 }
