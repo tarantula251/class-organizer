@@ -1,13 +1,14 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#652025</item>
         <item name="colorPrimaryDark">#4C4C4C</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="buttonStyle">@style/buttonStyle</item>
         <item name="android:textColor">@color/white_color</item>
+        <item name="android:navigationBarColor">@color/shadow_color</item>
     </style>
 
     <style name="modalStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
