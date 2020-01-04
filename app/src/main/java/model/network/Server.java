@@ -26,6 +26,7 @@ import model.data.User;
 
 public class Server
 {
+    private static Server instance = null;
     private Socket socket = null;
     private BufferedReader inputBuffer;
     private DataOutputStream dataOutputStream;
@@ -40,14 +41,38 @@ public class Server
     private static final byte modelGetAllCode = (byte)201;
     private static final byte cycleGetAllCode = (byte)202;
 
-    public Server(String ipAddress, int port)
+    static public Server getInstance()
+    {
+        if(instance == null) instance = new Server();
+        return instance;
+    }
+
+    private Server()
+    {}
+
+    public String getIpAddress()
+    {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress)
     {
         this.ipAddress = ipAddress;
+    }
+
+    public int getPort()
+    {
+        return port;
+    }
+
+    public void setPort(int port)
+    {
         this.port = port;
     }
 
     public void connect() throws IOException
     {
+        if(socket != null) return;
         socket = new Socket(ipAddress, port);
         inputBuffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         dataOutputStream = new DataOutputStream(socket.getOutputStream());
