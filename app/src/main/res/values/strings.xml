@@ -3,6 +3,9 @@
     <string name="edit_message">Enter a message</string>
     <string name="button_send">Send</string>
     <string name="empty_string" />
+    <!-- Network -->
+    <string name="ip_address">185.243.52.66</string>
+    <string name="connection_failed">Connection with server could not be established.</string>
     <!-- Login and registration -->
     <string name="username_label">Username</string>
     <string name="password_label">Password</string>
