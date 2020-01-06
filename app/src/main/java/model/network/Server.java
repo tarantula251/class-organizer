@@ -20,6 +20,7 @@ import model.builders.FieldJSONBuilder;
 import model.builders.JSONDataBuilder;
 import model.builders.ModelJSONBuilder;
 import model.builders.UserJSONBuilder;
+import model.data.Course;
 import model.data.Cycle;
 import model.data.Faculty;
 import model.data.Field;
@@ -156,25 +157,13 @@ public class Server
         return getDataArrayList(cycleGetAllCode, "", cycleJSONBuilder);
     }
 
-    public ArrayList<Field> getFields(Faculty faculty, Model model, Cycle cycle)
+    public ArrayList<Field> getFields(ArrayList<Faculty> faculties, ArrayList<Model> models, ArrayList<Cycle> cycles)
     {
-        JSONObject requestData = new JSONObject();
-        FieldJSONBuilder fieldJSONBuilder = new FieldJSONBuilder(faculty, model, cycle);
+        FieldJSONBuilder fieldJSONBuilder = new FieldJSONBuilder(faculties, models, cycles);
 
-        if(faculty == null || model == null || cycle == null) return null;
+        if(faculties == null || models == null || cycles == null) return null;
 
-        try
-        {
-            requestData.put("faculty", faculty.getId());
-            requestData.put("model", model.getId());
-            requestData.put("cycle", cycle.getId());
-        }
-        catch(JSONException e)
-        {
-            return null;
-        }
-
-        return getDataArrayList(fieldGetCode, requestData.toString(), fieldJSONBuilder);
+        return getDataArrayList(fieldGetCode, "", fieldJSONBuilder);
     }
 
     public User authorize(String email, String password) throws ServerException
