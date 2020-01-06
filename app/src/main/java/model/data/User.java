@@ -8,6 +8,11 @@ public class User implements Data
     private String email;
     private UserType type;
 
+    public User(int id)
+    {
+        this.id = id;
+    }
+
     public User(int id, String firstName, String lastName, String email, UserType type)
     {
         this.id = id;

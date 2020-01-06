@@ -8,6 +8,11 @@ public class Field implements Data
     private Model model;
     private Cycle cycle;
 
+    public Field(int id)
+    {
+        this.id = id;
+    }
+
     public Field(int id, String name, Faculty faculty, Model model, Cycle cycle)
     {
         this.id = id;

@@ -14,6 +14,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+import model.builders.CourseJSONBuilder;
 import model.builders.CycleJSONBuilder;
 import model.builders.FacultyJSONBuilder;
 import model.builders.FieldJSONBuilder;
@@ -39,11 +40,12 @@ public class Server
 
     //Message codes
     private static final byte authorizeCode = (byte)2;
-    private static final byte fieldGetCode = (byte)100;
+    private static final byte fieldGetAllCode = (byte)100;
     private static final byte facultyGetAllCode = (byte)200;
     private static final byte modelGetAllCode = (byte)201;
     private static final byte cycleGetAllCode = (byte)202;
     private static final byte userGetAllCode = (byte)203;
+    private static final byte courseGetAllCode = (byte)204;
 
     static public Server getInstance()
     {
@@ -163,7 +165,16 @@ public class Server
 
         if(faculties == null || models == null || cycles == null) return null;
 
-        return getDataArrayList(fieldGetCode, "", fieldJSONBuilder);
+        return getDataArrayList(fieldGetAllCode, "", fieldJSONBuilder);
+    }
+
+    public ArrayList<Course> getCourses(ArrayList<User> supervisors, ArrayList<Field> fields)
+    {
+        CourseJSONBuilder courseJSONBuilder = new CourseJSONBuilder(supervisors, fields);
+
+        if(supervisors == null || fields == null) return null;
+
+        return getDataArrayList(courseGetAllCode, "", courseJSONBuilder);
     }
 
     public User authorize(String email, String password) throws ServerException
