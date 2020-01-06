@@ -2,6 +2,8 @@ package com.example.classorganizer;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,6 +25,7 @@ public class ViewCoursesActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ViewCoursesAdapter adapter;
     private ArrayList<HashMap<String, ArrayList<String>>> classesList;
+    private ProgressBar progressBar;
 
     private static class GetMyClassesAsyncTask extends AsyncTask<Void, Integer, ArrayList<Class>>
     {
@@ -61,6 +64,7 @@ public class ViewCoursesActivity extends AppCompatActivity {
                 viewCoursesActivity.adapter = new ViewCoursesAdapter(viewCoursesActivity, viewCoursesActivity.classesList);
                 viewCoursesActivity.recyclerView.setAdapter(viewCoursesActivity.adapter);
             }
+            viewCoursesActivity.progressBar.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -68,6 +72,7 @@ public class ViewCoursesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_courses);
+        progressBar = findViewById(R.id.progressBar);
         GetMyClassesAsyncTask getMyClassesAsyncTask = new GetMyClassesAsyncTask(this, Server.getInstance());
         getMyClassesAsyncTask.execute();
     }
