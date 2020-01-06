@@ -1,5 +1,6 @@
 package com.example.classorganizer;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,89 +10,99 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import model.data.Course;
+import model.data.Class;
+import model.data.Cycle;
+import model.data.Faculty;
+import model.data.Field;
+import model.data.Model;
+import model.data.User;
+import model.network.Server;
+
 public class ViewCoursesActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ViewCoursesAdapter adapter;
-    private ArrayList<HashMap<String, ArrayList<String>>> courseList;
+    private ArrayList<HashMap<String, ArrayList<String>>> classesList;
+
+    private static class GetMyClassesAsyncTask extends AsyncTask<Void, Integer, ArrayList<Class>>
+    {
+        ViewCoursesActivity viewCoursesActivity;
+        Server server;
+
+        GetMyClassesAsyncTask(ViewCoursesActivity viewCoursesActivity, Server server)
+        {
+            this.viewCoursesActivity = viewCoursesActivity;
+            this.server = server;
+        }
+
+        @Override
+        protected ArrayList<Class> doInBackground(Void... voids)
+        {
+            ArrayList<User> users = server.getUsers();
+            ArrayList<Faculty> faculties = server.getFaculties();
+            ArrayList<Model> models = server.getModels();
+            ArrayList<Cycle> cycles = server.getCycles();
+            ArrayList<Field> fields = server.getFields(faculties, models, cycles);
+            ArrayList<Course> courses = server.getCourses(users, fields);
+            return server.getClassesForTeacher(courses, server.getAuthorizedUser());
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Class> classes)
+        {
+            if(classes != null)
+            {
+                viewCoursesActivity.classesList = new ArrayList<>();
+
+                for(Class classObject : classes) viewCoursesActivity.addClass(classObject);
+
+                viewCoursesActivity.recyclerView = viewCoursesActivity.findViewById(R.id.recyclerView);
+                viewCoursesActivity.recyclerView.setLayoutManager(new LinearLayoutManager(viewCoursesActivity));
+                viewCoursesActivity.adapter = new ViewCoursesAdapter(viewCoursesActivity, viewCoursesActivity.classesList);
+                viewCoursesActivity.recyclerView.setAdapter(viewCoursesActivity.adapter);
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_courses);
-        courseList = new ArrayList<>();
-        populateDataList();
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ViewCoursesAdapter(this, courseList);
-        recyclerView.setAdapter(adapter);
+        GetMyClassesAsyncTask getMyClassesAsyncTask = new GetMyClassesAsyncTask(this, Server.getInstance());
+        getMyClassesAsyncTask.execute();
     }
 
-    private void populateDataList() {
-        HashMap<String, ArrayList<String>> courseData = new HashMap<>();
+    private void addClass(Class classObject) {
+        HashMap<String, ArrayList<String>> classData = new HashMap<>();
 
         ArrayList<String> course = new ArrayList<>();
-        course.add("Image Processing");
-        courseData.put(getString(R.string.course), course);
+        course.add(classObject.getCourse().getName());
+        classData.put(getString(R.string.course), course);
 
         ArrayList<String> cycle = new ArrayList<>();
-        cycle.add("2nd");
-        courseData.put(getString(R.string.cycle), cycle);
+        cycle.add(classObject.getCourse().getField().getCycle().getName());
+        classData.put(getString(R.string.cycle), cycle);
 
         ArrayList<String> model = new ArrayList<>();
-        model.add("part-time");
-        courseData.put(getString(R.string.model), model);
+        model.add(classObject.getCourse().getField().getModel().getName());
+        classData.put(getString(R.string.model), model);
 
         ArrayList<String> faculty = new ArrayList<>();
-        faculty.add("FTIMS");
-        courseData.put(getString(R.string.faculty), faculty);
+        faculty.add(classObject.getCourse().getField().getFaculty().getName());
+        classData.put(getString(R.string.faculty), faculty);
 
         ArrayList<String> field = new ArrayList<>();
-        field.add("Information Technology");
-        courseData.put(getString(R.string.field), field);
+        field.add(classObject.getCourse().getField().getName());
+        classData.put(getString(R.string.field), field);
 
         ArrayList<String> supervisor = new ArrayList<>();
-        supervisor.add("dr inż. Michał Masecki");
-        courseData.put(getString(R.string.supervisor), supervisor);
+        supervisor.add(classObject.getCourse().getSupervisor().getFirstName() + " " + classObject.getCourse().getSupervisor().getLastName());
+        classData.put(getString(R.string.supervisor), supervisor);
 
         ArrayList<String> classes = new ArrayList<>();
-        classes.add("Laboratory Saturday 11.00 - 12.30");
-        classes.add("Lecture Sunday 9.00 - 10.30");
-        courseData.put(getString(R.string.classes), classes);
+        classes.add(classObject.getType().getName());
+        classData.put(getString(R.string.classes), classes);
 
-        /*-----------------------------------------------------*/
-
-        HashMap<String, ArrayList<String>> courseData2 = new HashMap<>();
-
-        ArrayList<String> course2 = new ArrayList<>();
-        course2.add("Database Administration");
-        courseData2.put(getString(R.string.course), course2);
-
-        ArrayList<String> cycle2 = new ArrayList<>();
-        cycle2.add("1nd");
-        courseData2.put(getString(R.string.cycle), cycle2);
-
-        ArrayList<String> model2 = new ArrayList<>();
-        model2.add("full-time");
-        courseData2.put(getString(R.string.model), model2);
-
-        ArrayList<String> faculty2 = new ArrayList<>();
-        faculty2.add("FTIMS");
-        courseData2.put(getString(R.string.faculty), faculty2);
-
-        ArrayList<String> field2 = new ArrayList<>();
-        field2.add("Information Technology");
-        courseData2.put(getString(R.string.field), field2);
-
-        ArrayList<String> supervisor2 = new ArrayList<>();
-        supervisor2.add("dr inż. Kacper Morawski");
-        courseData2.put(getString(R.string.supervisor), supervisor2);
-
-        ArrayList<String> classes2 = new ArrayList<>();
-        classes2.add("Laboratory Saturday 12.00 - 13.30");
-        classes2.add("Lecture Sunday 17.00 - 18.30");
-        courseData2.put(getString(R.string.classes), classes2);
-
-        courseList.add(courseData);
-        courseList.add(courseData2);
+        classesList.add(classData);
     }
 }
