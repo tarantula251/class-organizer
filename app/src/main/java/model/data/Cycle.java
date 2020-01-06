@@ -1,6 +1,6 @@
 package model.data;
 
-public class Cycle
+public class Cycle implements Data
 {
     private int id;
     private String name;
@@ -11,6 +11,7 @@ public class Cycle
         this.name = name;
     }
 
+    @Override
     public int getId()
     {
         return id;

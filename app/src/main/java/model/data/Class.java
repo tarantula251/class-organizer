@@ -1,6 +1,6 @@
 package model.data;
 
-public class Class
+public class Class implements Data
 {
     private int id;
     private String name;
@@ -17,6 +17,7 @@ public class Class
         this.teacher = teacher;
     }
 
+    @Override
     public int getId()
     {
         return id;

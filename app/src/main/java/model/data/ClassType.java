@@ -1,6 +1,6 @@
 package model.data;
 
-public class ClassType
+public class ClassType implements Data
 {
     private int id;
     private String name;
@@ -11,6 +11,7 @@ public class ClassType
         this.name = name;
     }
 
+    @Override
     public int getId()
     {
         return id;

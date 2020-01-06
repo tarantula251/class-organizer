@@ -2,7 +2,7 @@ package model.data;
 
 import java.util.ArrayList;
 
-public class Course
+public class Course implements Data
 {
     private int id;
     private String name;
@@ -16,6 +16,7 @@ public class Course
         this.supervisor = supervisor;
     }
 
+    @Override
     public int getId()
     {
         return id;

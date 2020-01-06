@@ -2,7 +2,7 @@ package model.data;
 
 import java.time.LocalDateTime;
 
-public class Result
+public class Result implements Data
 {
     private int id;
     private double mark;
@@ -21,6 +21,7 @@ public class Result
         this.classDate = classDate;
     }
 
+    @Override
     public int getId()
     {
         return id;
