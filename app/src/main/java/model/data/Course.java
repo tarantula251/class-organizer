@@ -10,6 +10,11 @@ public class Course implements Data
     private Field field;
     private ArrayList<User> students = new ArrayList<User>();
 
+    public Course(int id)
+    {
+        this.id = id;
+    }
+
     public Course(int id, String name, User supervisor, Field field)
     {
         this.id = id;

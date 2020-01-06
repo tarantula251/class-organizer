@@ -107,6 +107,7 @@ public class LoginActivity extends AppCompatActivity {
         {
             if(user != null)
             {
+                server.setAuthorizedUser(user);
                 Intent intent = new Intent(loginActivity, MenuActivity.class);
                 loginActivity.startActivity(intent);
             }

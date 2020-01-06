@@ -14,6 +14,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+import model.builders.ClassFromTeacherJSONBuilder;
 import model.builders.CourseJSONBuilder;
 import model.builders.CycleJSONBuilder;
 import model.builders.FacultyJSONBuilder;
@@ -27,6 +28,7 @@ import model.data.Faculty;
 import model.data.Field;
 import model.data.Model;
 import model.data.User;
+import model.data.Class;
 
 public class Server
 {
@@ -37,15 +39,17 @@ public class Server
     private PrintWriter outputWriter;
     private String ipAddress;
     private int port;
+    private User authorizedUser = null;
 
     //Message codes
     private static final byte authorizeCode = (byte)2;
-    private static final byte fieldGetAllCode = (byte)100;
+    private static final byte classGetForTeacherCode = (byte)100;
     private static final byte facultyGetAllCode = (byte)200;
     private static final byte modelGetAllCode = (byte)201;
     private static final byte cycleGetAllCode = (byte)202;
     private static final byte userGetAllCode = (byte)203;
     private static final byte courseGetAllCode = (byte)204;
+    private static final byte fieldGetAllCode = (byte)205;
 
     static public Server getInstance()
     {
@@ -74,6 +78,16 @@ public class Server
     public void setPort(int port)
     {
         this.port = port;
+    }
+
+    public User getAuthorizedUser()
+    {
+        return authorizedUser;
+    }
+
+    public void setAuthorizedUser(User authorizedUser)
+    {
+        this.authorizedUser = authorizedUser;
     }
 
     public void connect() throws IOException
@@ -110,6 +124,7 @@ public class Server
         }
         catch(IOException exception)
         {
+            exception.printStackTrace();
             return null;
         }
         if(response == null)
@@ -123,12 +138,13 @@ public class Server
             for(int index = 0; index < jsonArray.length(); ++index)
             {
                 JSONObject jsonObject = jsonArray.getJSONObject(index);
-
-                result.add(dataBuilder.buildData(jsonObject));
+                T object = dataBuilder.buildData(jsonObject);
+                if(object != null) result.add(object);
             }
         }
         catch(JSONException exception)
         {
+            exception.printStackTrace();
             return null;
         }
 
@@ -175,6 +191,24 @@ public class Server
         if(supervisors == null || fields == null) return null;
 
         return getDataArrayList(courseGetAllCode, "", courseJSONBuilder);
+    }
+
+    public ArrayList<Class> getClassesForTeacher(ArrayList<Course> courses, User teacher)
+    {
+        if(courses == null || teacher == null) return  null;
+
+        JSONObject requestDataJson = new JSONObject();
+        try
+        {
+            requestDataJson.put("teacher", teacher.getId());
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+        }
+        ClassFromTeacherJSONBuilder classFromTeacherJSONBuilder = new ClassFromTeacherJSONBuilder(courses, teacher);
+
+        return getDataArrayList(classGetForTeacherCode, requestDataJson.toString(), classFromTeacherJSONBuilder);
     }
 
     public User authorize(String email, String password) throws ServerException
