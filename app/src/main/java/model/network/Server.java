@@ -42,6 +42,7 @@ public class Server
     private static final byte facultyGetAllCode = (byte)200;
     private static final byte modelGetAllCode = (byte)201;
     private static final byte cycleGetAllCode = (byte)202;
+    private static final byte userGetAllCode = (byte)203;
 
     static public Server getInstance()
     {
@@ -129,6 +130,12 @@ public class Server
         }
 
         return result;
+    }
+
+    public ArrayList<User> getUsers()
+    {
+        UserJSONBuilder userJSONBuilder = new UserJSONBuilder();
+        return getDataArrayList(userGetAllCode, "", userJSONBuilder);
     }
 
     public ArrayList<Faculty> getFaculties()
