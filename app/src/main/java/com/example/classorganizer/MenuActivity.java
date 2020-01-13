@@ -16,7 +16,12 @@ public class MenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu);
+        boolean isUserTypeStudent = true;
+        if (isUserTypeStudent) {
+            setContentView(R.layout.activity_menu_student);
+        } else {
+            setContentView(R.layout.activity_menu);
+        }
     }
 
     public void showFilterCoursesAttendance(View view) {
@@ -77,6 +82,11 @@ public class MenuActivity extends AppCompatActivity {
 
     public void showManageResults(View view) {
         Intent intent = new Intent(this, ManageResultsActivity.class);
+        startActivity(intent);
+    }
+
+    public void showRegisterAttendance(View view) {
+        Intent intent = new Intent(this, RegisterAttendanceActivity.class);
         startActivity(intent);
     }
 }

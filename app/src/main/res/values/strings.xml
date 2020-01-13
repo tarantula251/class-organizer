@@ -33,6 +33,7 @@
     <string name="menu_manage_results">Manage Results</string>
     <string name="menu_my_account">My Account</string>
     <string name="menu_logout">Logout</string>
+    <string name="menu_register_attendance">Register Attendance</string>
     <!-- Courses -->
     <string name="filter_courses_info">Filter out courses to display.</string>
     <string name="view_courses_info">View all the courses you run.</string>
@@ -65,4 +66,9 @@
     <string name="result">Result</string>
     <string name="description">Description</string>
     <string name="added_date">Date</string>
+    <!-- Register attendance -->
+    <string name="register_info_message">Turn on NFC in your mobile device and move it close to your teacher\'s smartphone.</string>
+    <string name="register_success_message">Thank you! Your attendance has been successfully registered.</string>
+    <string name="register_error_message">Oops... Something went wrong. Check if your NFC is turned on and try again.</string>
+
 </resources>

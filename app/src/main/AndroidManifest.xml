@@ -24,6 +24,13 @@
                 android:value=".ManageResultsActivity" />
         </activity>
         <activity
+            android:name=".RegisterAttendanceActivity"
+            android:parentActivityName=".MenuActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MenuActivity" />
+        </activity>
+        <activity
             android:name=".ManageResultsActivity"
             android:parentActivityName=".MenuActivity">
             <meta-data
