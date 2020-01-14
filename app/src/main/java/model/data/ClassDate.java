@@ -1,8 +1,9 @@
 package model.data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class ClassDate implements Data
+public class ClassDate implements Data, Serializable
 {
     private int id;
     private LocalDateTime dateTime;

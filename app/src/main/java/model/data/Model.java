@@ -1,6 +1,8 @@
 package model.data;
 
-public class Model implements Data
+import java.io.Serializable;
+
+public class Model implements Data, Serializable
 {
     private int id;
     private String name;

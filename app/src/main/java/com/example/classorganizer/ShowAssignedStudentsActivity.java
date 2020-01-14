@@ -27,8 +27,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import model.data.Class;
+
 public class ShowAssignedStudentsActivity extends AppCompatActivity {
-    private HashMap<String, String> classData;
+    private Class classObject;
     private HashMap<String, String> studentData;
     private ArrayList<HashMap<String, String>> list;
     private ListView listView;
@@ -46,7 +48,7 @@ public class ShowAssignedStudentsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_assigned_students);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            classData = (HashMap<String, String>) bundle.getSerializable("selectedClass");
+            classObject = (Class) bundle.getSerializable("class");
         }
         fillInfoBox();
         listView = findViewById(R.id.studentsListView);
@@ -57,9 +59,9 @@ public class ShowAssignedStudentsActivity extends AppCompatActivity {
     }
 
     private void fillInfoBox() {
-        String course = classData.get(getString(R.string.course));
-        String model = classData.get(getString(R.string.model));
-        String classes = classData.get(getString(R.string.classes));
+        String course = classObject.getCourse().getName();
+        String model = classObject.getCourse().getField().getModel().getName();
+        String classes = classObject.getType().getName();
         TextView courseTextView = findViewById(R.id.course);
         TextView modelTextView = findViewById(R.id.model);
         TextView classesTextView = findViewById(R.id.classes);
@@ -223,7 +225,7 @@ public class ShowAssignedStudentsActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, ViewResultsActivity.class);
         Bundle extras = new Bundle();
-        extras.putSerializable("selectedClass", classData);
+        extras.putSerializable("selectedClass", classObject);
         extras.putSerializable("selectedStudent", studentData);
         intent.putExtras(extras);
         startActivity(intent);

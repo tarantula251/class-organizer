@@ -1,6 +1,8 @@
 package model.data;
 
-public class Faculty implements Data
+import java.io.Serializable;
+
+public class Faculty implements Data, Serializable
 {
     private int id;
     private String name;

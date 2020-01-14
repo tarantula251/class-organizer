@@ -76,7 +76,7 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     public void showManageResults(View view) {
-        Intent intent = new Intent(this, ManageResultsActivity.class);
+        Intent intent = new Intent(this, ViewCoursesActivity.class);
         startActivity(intent);
     }
 }

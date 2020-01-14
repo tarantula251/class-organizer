@@ -32,7 +32,7 @@
     <string name="no">No</string>
     <!-- Menu -->
     <string name="menu_manage_attendance">Manage Attendance</string>
-    <string name="menu_view_courses">View Courses</string>
+    <string name="menu_view_courses">Manage Courses</string>
     <string name="menu_manage_results">Manage Results</string>
     <string name="menu_my_account">My Account</string>
     <string name="menu_logout">Logout</string>

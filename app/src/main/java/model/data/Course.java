@@ -1,8 +1,9 @@
 package model.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Course implements Data
+public class Course implements Data, Serializable
 {
     private int id;
     private String name;

@@ -1,6 +1,8 @@
 package model.data;
 
-public class Cycle implements Data
+import java.io.Serializable;
+
+public class Cycle implements Data, Serializable
 {
     private int id;
     private String name;

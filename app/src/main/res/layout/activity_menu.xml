@@ -7,17 +7,6 @@
     android:background="@drawable/default_background"
     tools:context=".MenuActivity" >
 
-    <ImageView
-        android:id="@+id/attendanceImageView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="96dp"
-        android:onClick="showFilterCoursesAttendance"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/space2"
-        app:srcCompat="@drawable/menu_attendance" />
-
     <Space
         android:id="@+id/space2"
         android:layout_width="wrap_content"
@@ -29,29 +18,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/menu_attendance_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="@string/menu_manage_attendance"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="@+id/attendanceImageView"
-        app:layout_constraintEnd_toEndOf="@+id/attendanceImageView"
-        app:layout_constraintStart_toStartOf="@+id/attendanceImageView" />
-
     <ImageView
         android:id="@+id/coursesIimageView"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="96dp"
-        android:layout_marginEnd="32dp"
-        android:onClick="showViewCourses"
+        android:layout_marginStart="125dp"
+        android:layout_marginTop="160dp"
+        android:layout_marginEnd="125dp"
+        android:onClick="showManageResults"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/attendanceImageView"
-        app:layout_constraintTop_toBottomOf="@+id/space2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/menu_courses" />
 
     <TextView
@@ -66,41 +43,16 @@
         app:layout_constraintStart_toStartOf="@+id/coursesIimageView" />
 
     <ImageView
-        android:id="@+id/resultsImageView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="32dp"
-        android:onClick="showManageResults"
-        app:layout_constraintBottom_toTopOf="@+id/accountImageView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/attendanceImageView"
-        app:srcCompat="@drawable/menu_results" />
-
-    <TextView
-        android:id="@+id/menu_results_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="@string/menu_manage_results"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="@+id/resultsImageView"
-        app:layout_constraintEnd_toEndOf="@+id/resultsImageView"
-        app:layout_constraintStart_toStartOf="@+id/resultsImageView" />
-
-    <ImageView
         android:id="@+id/accountImageView"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginStart="125dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="125dp"
         android:onClick="showAccount"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/coursesIimageView"
         app:srcCompat="@drawable/menu_account" />
 
     <TextView
@@ -118,13 +70,13 @@
         android:id="@+id/logoutImageView"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginStart="125dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="125dp"
         android:onClick="showLogoutModal"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/accountImageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/accountImageView"
         app:srcCompat="@drawable/menu_logout" />
 
     <TextView
