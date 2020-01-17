@@ -33,7 +33,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="4dp"
-                android:columnCount="2"
+                android:columnCount="3"
                 android:orientation="horizontal"
                 android:weightSum="100"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -69,18 +69,18 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/dateLabel"
+                    android:id="@+id/titleLabel"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_row="1"
                     android:layout_column="0"
-                    android:text="@string/added_colon"
+                    android:text="@string/title"
                     android:textColor="@color/add_result_label_color"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/dateValue"
+                    android:id="@+id/titleValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_row="1"
@@ -95,10 +95,36 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/descriptionLabel"
+                    android:id="@+id/dateLabel"
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_row="2"
+                    android:layout_column="0"
+                    android:text="@string/added_colon"
+                    android:textColor="@color/add_result_label_color"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/dateValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="2"
+                    android:layout_column="1"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:inputType="none"
+                    android:textColor="@color/list_item_background_color"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/descriptionLabel"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_row="3"
                     android:layout_column="0"
                     android:text="@string/description_colon"
                     android:textColor="@color/add_result_label_color"
@@ -109,7 +135,7 @@
                     android:id="@+id/descriptionValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_row="3"
+                    android:layout_row="4"
                     android:layout_column="0"
                     android:layout_columnSpan="2"
                     android:clickable="false"
@@ -123,6 +149,16 @@
                     android:textColor="@color/list_item_background_color"
                     android:textSize="12sp"
                     android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/resultId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="0"
+                    android:layout_column="2"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:visibility="invisible" />
 
             </GridLayout>
 

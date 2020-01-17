@@ -5,22 +5,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import model.data.Result;
 
 public class ViewResultsAdapter extends RecyclerView.Adapter<ViewResultsAdapter.ResultViewHolder>{
 
     private LayoutInflater layoutInflater;
-    private ArrayList<HashMap<String, ArrayList<String>>> data;
+    private ArrayList<Result> results;
     private Context context;
 
-    public ViewResultsAdapter(Context context, ArrayList<HashMap<String, ArrayList<String>>> data) {
+    ViewResultsAdapter(ArrayList<Result> results, Context context)
+    {
         this.layoutInflater = LayoutInflater.from(context);
-        this.data = data;
+        this.results = results;
         this.context = context;
     }
 
@@ -34,31 +39,39 @@ public class ViewResultsAdapter extends RecyclerView.Adapter<ViewResultsAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ResultViewHolder holder, int position) {
-        HashMap<String, ArrayList<String>> resultData = data.get(position);
 
-        String result = resultData.get(context.getResources().getString(R.string.result)).get(0);
-        holder.textResult.setText(result);
+        Result result = results.get(position);
 
-        String date = resultData.get(context.getResources().getString(R.string.added_date)).get(0);
+        holder.resultId.setText(Integer.toString(result.getId()));
+
+        String score = Double.toString(result.getScore());
+        holder.textResult.setText(score);
+
+        String title = result.getTitle();
+        holder.textTitle.setText(title);
+
+        String date = result.getLastUpdated().format(new DateTimeFormatterBuilder().appendPattern("dd-MM-YYYY HH:mm").toFormatter());
         holder.textDate.setText(date);
 
-        String description = resultData.get(context.getResources().getString(R.string.description)).get(0);
+        String description = result.getNote();
         holder.textDescription.setText(description);
     }
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return results.size();
     }
 
     public static class ResultViewHolder extends RecyclerView.ViewHolder{
-        private EditText textResult, textDate, textDescription;
+        private EditText textResult, textTitle, textDate, textDescription, resultId;
 
         public ResultViewHolder(@NonNull View itemView) {
             super(itemView);
             textResult = itemView.findViewById(R.id.resultValue);
+            textTitle = itemView.findViewById(R.id.titleValue);
             textDate = itemView.findViewById(R.id.dateValue);
             textDescription = itemView.findViewById(R.id.descriptionValue);
+            resultId = itemView.findViewById(R.id.resultId);
         }
     }
 }

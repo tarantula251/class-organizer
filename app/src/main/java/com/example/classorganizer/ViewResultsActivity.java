@@ -1,6 +1,7 @@
 package com.example.classorganizer;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -21,24 +23,101 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import model.data.Class;
+import model.data.Result;
+import model.data.User;
+import model.network.Server;
+import model.network.ServerException;
+
 public class ViewResultsActivity extends AppCompatActivity {
-    private HashMap<String, String> classData;
+    private Class classObject;
     private HashMap<String, String> studentData;
     private RecyclerView recyclerView;
     private ViewResultsAdapter adapter;
-    private ArrayList<HashMap<String, ArrayList<String>>> resultsList;
     private ConstraintSet constraintSetBeforeEditClick;
     private EditText resultEditText;
     private int maxLengthResultText = 3;
     private boolean saveAllowed = false;
     private boolean editAllowed = true;
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-YYYY HH:mm:ss");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-YYYY HH:mm");
+
+    static private class GetResultsAsyncTask extends AsyncTask<String, Integer, ArrayList<Result>>
+    {
+        ViewResultsActivity viewResultsActivity;
+
+        public GetResultsAsyncTask(ViewResultsActivity viewResultsActivity)
+        {
+            this.viewResultsActivity = viewResultsActivity;
+        }
+
+        @Override
+        protected ArrayList<Result> doInBackground(String... strings)
+        {
+            if(strings.length == 0) return null;
+            Server server = Server.getInstance();
+            User user = server.getUserForEmailId(strings[0]);
+            return server.getResultsForUserClass(user, viewResultsActivity.classObject);
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Result> results)
+        {
+            if(results == null) return;
+            viewResultsActivity.adapter = new ViewResultsAdapter(results, viewResultsActivity);
+            viewResultsActivity.recyclerView.setAdapter(viewResultsActivity.adapter);
+        }
+    }
+
+    static private class UpdateResultAsyncTask extends AsyncTask<String, Integer, ServerException>
+    {
+        ViewResultsActivity viewResultsActivity;
+        private int id;
+        private float score;
+
+        public UpdateResultAsyncTask(ViewResultsActivity viewResultsActivity, int id, float score)
+        {
+            this.viewResultsActivity = viewResultsActivity;
+            this.id = id;
+            this.score = score;
+        }
+
+        @Override
+        protected ServerException doInBackground(String... strings)
+        {
+            if(strings.length != 2) return new ServerException(-1, "Invalid or lack of arguments");
+            Server server = Server.getInstance();
+            try
+            {
+                server.updateResult(id, strings[0], strings[1], score);
+            }
+            catch(ServerException e)
+            {
+                return e;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(ServerException e)
+        {
+            if(e != null)
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(viewResultsActivity, R.style.modalStyle);
+                builder.setMessage("Update result failed.");
+                builder.setMessage(e.getMessage());
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        }
+    }
 
 
     @Override
@@ -47,16 +126,14 @@ public class ViewResultsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_results);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            classData = (HashMap<String, String>) bundle.getSerializable("selectedClass");
+            classObject = (Class) bundle.getSerializable("class");
             studentData = (HashMap<String, String>) bundle.getSerializable("selectedStudent");
         }
         fillStudentBox();
-        resultsList = new ArrayList<>();
-        populateDataList();
         recyclerView = findViewById(R.id.resultsRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ViewResultsAdapter(this, resultsList);
-        recyclerView.setAdapter(adapter);
+        GetResultsAsyncTask getResultsAsyncTask = new GetResultsAsyncTask(this);
+        getResultsAsyncTask.execute(studentData.get(getResources().getString(R.string.student_id)));
     }
 
     private void fillStudentBox() {
@@ -66,39 +143,6 @@ public class ViewResultsActivity extends AppCompatActivity {
         TextView studentIdTextView = findViewById(R.id.resultsStudentId);
         studentNameTextView.setText(studentName);
         studentIdTextView.setText(studentId);
-    }
-
-    private void populateDataList() {
-        HashMap<String, ArrayList<String>> resultData = new HashMap<>();
-
-        ArrayList<String> result = new ArrayList<>();
-        result.add("4.0");
-        resultData.put(getString(R.string.result), result);
-
-        ArrayList<String> date = new ArrayList<>();
-        date.add(dateFormat.format(new Date()));
-        resultData.put(getString(R.string.added_date), date);
-
-        ArrayList<String> description = new ArrayList<>();
-        description.add("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et pharetra lorem, in ultricies nunc. Lorem ipsum posuere.");
-        resultData.put(getString(R.string.description), description);
-
-        HashMap<String, ArrayList<String>> resultData2 = new HashMap<>();
-
-        ArrayList<String> result2 = new ArrayList<>();
-        result2.add("3.5");
-        resultData2.put(getString(R.string.result), result2);
-
-        ArrayList<String> date2 = new ArrayList<>();
-        date2.add(dateFormat.format(new Date()));
-        resultData2.put(getString(R.string.added_date), date2);
-
-        ArrayList<String> description2 = new ArrayList<>();
-        description2.add("Quisque a purus et purus commodo ultricies eu pharetra mauris. Cras ac neque ac justo congue nullam.");
-        resultData2.put(getString(R.string.description), description2);
-
-        resultsList.add(resultData);
-        resultsList.add(resultData2);
     }
 
     public void performEditResult(View view) {
@@ -136,6 +180,14 @@ public class ViewResultsActivity extends AppCompatActivity {
             InputFilter lengthInputFilter = new InputFilter.LengthFilter(maxLengthResultText);
             resultEditText.setFilters(new InputFilter[] {lengthInputFilter, new DecimalDigitsInputFilter()});
 
+            EditText titleEditText = gridLayout.findViewById(R.id.titleValue);
+            titleEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+            titleEditText.setFocusable(true);
+            titleEditText.setFocusableInTouchMode(true);
+            titleEditText.setClickable(true);
+            titleEditText.setCursorVisible(true);
+            titleEditText.setSelection(titleEditText.getText().length());
+
             EditText dateEditText = gridLayout.findViewById(R.id.dateValue);
             dateEditText.getText().clear();
 
@@ -163,6 +215,15 @@ public class ViewResultsActivity extends AppCompatActivity {
             ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
             ConstraintLayout constraintLayout = (ConstraintLayout) view.getParent();
             GridLayout gridLayout = constraintLayout.findViewById(R.id.resultGrid);
+
+            EditText titleEditText = gridLayout.findViewById(R.id.titleValue);
+            titleEditText.setInputType(InputType.TYPE_NULL);
+            titleEditText.setFocusable(false);
+            titleEditText.setFocusableInTouchMode(false);
+            titleEditText.setClickable(false);
+            titleEditText.setCursorVisible(false);
+
+            EditText resultIdEditText = constraintLayout.findViewById(R.id.resultId);
 
             Button saveBtn = constraintLayout.findViewById(R.id.save_button);
             if (saveBtn.getVisibility() == View.VISIBLE) {
@@ -197,13 +258,16 @@ public class ViewResultsActivity extends AppCompatActivity {
             descriptionEditText.setClickable(false);
             descriptionEditText.setCursorVisible(false);
 
-            performUpdateResult(resultEditText.getText().toString(), date, descriptionEditText.getText().toString());
+            performUpdateResult(Integer.parseInt(resultIdEditText.getText().toString()), titleEditText.getText().toString(),  descriptionEditText.getText().toString(), Float.parseFloat(resultEditText.getText().toString()));
         }
         editAllowed = true;
         saveAllowed = false;
     }
 
-    private void performUpdateResult(String result, String addedDate, String description) {
+    private void performUpdateResult(int resultId, String title, String description, float score)
+    {
+        UpdateResultAsyncTask updateResultAsyncTask = new UpdateResultAsyncTask(this, resultId, score);
+        updateResultAsyncTask.execute(title, description);
     }
 
     private class DecimalDigitsInputFilter implements InputFilter {

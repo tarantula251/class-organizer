@@ -21,12 +21,14 @@ import model.builders.FacultyJSONBuilder;
 import model.builders.FieldJSONBuilder;
 import model.builders.JSONDataBuilder;
 import model.builders.ModelJSONBuilder;
+import model.builders.ResultJSONBuilder;
 import model.builders.UserJSONBuilder;
 import model.data.Course;
 import model.data.Cycle;
 import model.data.Faculty;
 import model.data.Field;
 import model.data.Model;
+import model.data.Result;
 import model.data.User;
 import model.data.Class;
 
@@ -44,6 +46,11 @@ public class Server
     //Message codes
     private static final byte authorizeCode = (byte)2;
     private static final byte classGetForTeacherCode = (byte)100;
+    private static final byte userGetForClass = (byte)101;
+    private static final byte gradeAddForUserEmailId = (byte)102;
+    private static final byte userGetForEmailId = (byte)103;
+    private static final byte gradeGetForUserClass = (byte)104;
+    private static final byte gradeUpdate = (byte)105;
     private static final byte facultyGetAllCode = (byte)200;
     private static final byte modelGetAllCode = (byte)201;
     private static final byte cycleGetAllCode = (byte)202;
@@ -120,7 +127,6 @@ public class Server
         {
             sendMessage(messageCode, message);
             response = readResponse();
-
         }
         catch(IOException exception)
         {
@@ -144,6 +150,7 @@ public class Server
         }
         catch(JSONException exception)
         {
+
             exception.printStackTrace();
             return null;
         }
@@ -209,6 +216,115 @@ public class Server
         ClassFromTeacherJSONBuilder classFromTeacherJSONBuilder = new ClassFromTeacherJSONBuilder(courses, teacher);
 
         return getDataArrayList(classGetForTeacherCode, requestDataJson.toString(), classFromTeacherJSONBuilder);
+    }
+
+    public ArrayList<User> getUsersForClass(Class classObject)
+    {
+        if(classObject == null) return null;
+
+        JSONObject requestDataJson = new JSONObject();
+        try
+        {
+            requestDataJson.put("class", classObject.getId());
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+        }
+        UserJSONBuilder userJSONBuilder = new UserJSONBuilder();
+
+        return getDataArrayList(userGetForClass, requestDataJson.toString(), userJSONBuilder);
+
+    }
+
+    public User getUserForEmailId(String emailId)
+    {
+        if(emailId == null) return null;
+
+        JSONObject requestDataJson = new JSONObject();
+        try
+        {
+            requestDataJson.put("emailId", emailId + "%");
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+        }
+        UserJSONBuilder userJSONBuilder = new UserJSONBuilder();
+
+        ArrayList<User> userArray = getDataArrayList(userGetForEmailId, requestDataJson.toString(), userJSONBuilder);
+
+        return userArray == null ? null : userArray.get(0);
+    }
+
+    public ArrayList<Result> getResultsForUserClass(User user, Class classObject)
+    {
+        if(user == null | classObject == null) return null;
+
+        JSONObject requestDataJson = new JSONObject();
+        try
+        {
+            requestDataJson.put("user", user.getId());
+            requestDataJson.put("class", classObject.getId());
+        }
+        catch(JSONException e)
+        {
+            e.printStackTrace();
+        }
+        ResultJSONBuilder resultJSONBuilder = new ResultJSONBuilder(classObject, user);
+
+        return getDataArrayList(gradeGetForUserClass, requestDataJson.toString(), resultJSONBuilder);
+    }
+
+    public Integer addResultForUserEmailId(String emailId, String title, String description, float result, Class classObject) throws ServerException
+    {
+        JSONObject requestDataJson = new JSONObject();
+        String response;
+        try
+        {
+            requestDataJson.put("emailId", emailId);
+            requestDataJson.put("title", title);
+            requestDataJson.put("note", description);
+            requestDataJson.put("score", result);
+            requestDataJson.put("class", classObject.getId());
+            sendMessage(gradeAddForUserEmailId, requestDataJson.toString());
+            response = readResponse();
+            return new JSONObject(response).getInt("id");
+        }
+        catch(JSONException e)
+        {
+            throw new ServerException(e.hashCode(), "JSON couldn't be parsed");
+        }
+        catch(IOException e)
+        {
+            throw new ServerException(e.hashCode(), e.getMessage());
+        }
+    }
+
+    public void updateResult(int id, String title, String description, float result) throws ServerException
+    {
+        JSONObject requestDataJson = new JSONObject();
+        String response;
+        try
+        {
+            requestDataJson.put("id", id);
+            requestDataJson.put("title", title);
+            requestDataJson.put("note", description);
+            requestDataJson.put("score", result);
+            sendMessage(gradeUpdate, requestDataJson.toString());
+            response = readResponse();
+            ServerExceptionJSONBuilder serverExceptionJSONBuilder = new ServerExceptionJSONBuilder();
+            ServerException serverException = serverExceptionJSONBuilder.buildData(new JSONArray(response).getJSONObject(0));
+            if(serverException.getErrorCode() != 0) throw serverException;
+        }
+        catch(JSONException e)
+        {
+            throw new ServerException(e.hashCode(), "JSON couldn't be parsed");
+        }
+        catch(IOException e)
+        {
+            throw new ServerException(e.hashCode(), e.getMessage());
+        }
     }
 
     public User authorize(String email, String password) throws ServerException

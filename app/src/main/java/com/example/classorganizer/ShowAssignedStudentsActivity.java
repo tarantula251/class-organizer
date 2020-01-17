@@ -3,6 +3,7 @@ package com.example.classorganizer;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -28,6 +29,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import model.data.Class;
+import model.data.User;
+import model.network.Server;
+import model.network.ServerException;
 
 public class ShowAssignedStudentsActivity extends AppCompatActivity {
     private Class classObject;
@@ -38,9 +42,76 @@ public class ShowAssignedStudentsActivity extends AppCompatActivity {
     private TextView studentIdTextView;
     private TextView studentNameTextView;
     private int maxLengthDescriptionText = 250;
+    private int maxLengthTitleText = 45;
     private int maxLengthResultText = 3;
     public static final String FIRST_COLUMN = "Column 1";
     public static final String SECOND_COLUMN = "Column 2";
+
+    static class GetUsersForClassAsyncTask extends AsyncTask<Class, Integer, ArrayList<User>>
+    {
+        ShowAssignedStudentsActivity showAssignedStudentsActivity;
+
+        GetUsersForClassAsyncTask(ShowAssignedStudentsActivity showAssignedStudentsActivity)
+        {
+            this.showAssignedStudentsActivity = showAssignedStudentsActivity;
+        }
+
+        @Override
+        protected ArrayList<User> doInBackground(Class... classes)
+        {
+            if(classes.length == 0) return null;
+            Server server = Server.getInstance();
+            return  server.getUsersForClass(classes[0]);
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<User> users)
+        {
+            if(users == null) return;
+            showAssignedStudentsActivity.populateList(users);
+            AssignedStudentsAdapter adapter = new AssignedStudentsAdapter(showAssignedStudentsActivity, showAssignedStudentsActivity.list);
+            showAssignedStudentsActivity.listView.setAdapter(adapter);
+        }
+    }
+
+    static class AddResultForUserAsyncTask extends AsyncTask<String, Integer, ServerException>
+    {
+        ShowAssignedStudentsActivity showAssignedStudentsActivity;
+
+        AddResultForUserAsyncTask(ShowAssignedStudentsActivity showAssignedStudentsActivity)
+        {
+            this.showAssignedStudentsActivity = showAssignedStudentsActivity;
+        }
+
+        @Override
+        protected ServerException doInBackground(String... strings)
+        {
+            if(strings.length < 4) return new ServerException(-1, "Invalid or lack of arguments");
+            Server server = Server.getInstance();
+            try
+            {
+                Integer id = server.addResultForUserEmailId(strings[0], strings[1], strings[2], Float.parseFloat(strings[3]), showAssignedStudentsActivity.classObject);
+                return new ServerException(id, "Success");
+            }
+            catch(ServerException e)
+            {
+                return e;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(ServerException serverException)
+        {
+            if(serverException.getErrorCode() != 0)
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(showAssignedStudentsActivity, R.style.modalStyle);
+                builder.setMessage("Add result failed.");
+                builder.setMessage(serverException.getMessage());
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +123,11 @@ public class ShowAssignedStudentsActivity extends AppCompatActivity {
         }
         fillInfoBox();
         listView = findViewById(R.id.studentsListView);
-        populateList();
-        AssignedStudentsAdapter adapter = new AssignedStudentsAdapter(this, list);
-        listView.setAdapter(adapter);
+
         studentData = new HashMap<>();
+        list = new ArrayList<>();
+        GetUsersForClassAsyncTask getUsersForClassAsyncTask = new GetUsersForClassAsyncTask(this);
+        getUsersForClassAsyncTask.execute(classObject);
     }
 
     private void fillInfoBox() {
@@ -70,71 +142,19 @@ public class ShowAssignedStudentsActivity extends AppCompatActivity {
         classesTextView.setText(classes);
     }
 
-    private void populateList() {
-        list = new ArrayList<>();
-
+    private void populateList(ArrayList<User> users) {
         HashMap<String, String> rowFirst = new HashMap<String, String>();
         rowFirst.put(FIRST_COLUMN, getResources().getString(R.string.student_id));
         rowFirst.put(SECOND_COLUMN, getResources().getString(R.string.student_name));
         list.add(rowFirst);
 
-        HashMap<String, String> rowScnd = new HashMap<String, String>();
-        rowScnd.put(FIRST_COLUMN,"217097");
-        rowScnd.put(SECOND_COLUMN, "Katarzyna Waszczykowska");
-        list.add(rowScnd);
-
-        HashMap<String, String> rowThrd = new HashMap<String, String>();
-        rowThrd.put(FIRST_COLUMN,"217086");
-        rowThrd.put(SECOND_COLUMN, "Wiktor Kacper Wączyński");
-        list.add(rowThrd);
-        HashMap<String, String> row1 = new HashMap<String, String>();
-        row1.put(FIRST_COLUMN,"217086");
-        row1.put(SECOND_COLUMN, "Wiktor Kacper Wączyński");
-        list.add(row1);
-        HashMap<String, String> row2 = new HashMap<String, String>();
-        row2.put(FIRST_COLUMN,"217086");
-        row2.put(SECOND_COLUMN, "Wiktor Kacper Wączyński");
-        list.add(row2);
-        HashMap<String, String> row3 = new HashMap<String, String>();
-        row3.put(FIRST_COLUMN,"217086");
-        row3.put(SECOND_COLUMN, "Wiktor Kacper Wączyński");
-        list.add(row3);
-        HashMap<String, String> row4 = new HashMap<String, String>();
-        row4.put(FIRST_COLUMN,"217086");
-        row4.put(SECOND_COLUMN, "Wiktor Kacper Wączyński");
-        list.add(row4);
-        HashMap<String, String> row5 = new HashMap<String, String>();
-        row5.put(FIRST_COLUMN,"217086");
-        row5.put(SECOND_COLUMN, "Wiktor Kacper Wączyński");
-        list.add(row5);
-        HashMap<String, String> row6 = new HashMap<String, String>();
-        row6.put(FIRST_COLUMN,"217086");
-        row6.put(SECOND_COLUMN, "Wiktor Kacper Wączyński");
-        list.add(row6);
-        HashMap<String, String> row7 = new HashMap<String, String>();
-        row7.put(FIRST_COLUMN,"217086");
-        row7.put(SECOND_COLUMN, "Wiktor Kacper Wączyński");
-        list.add(row7);
-        HashMap<String, String> row8 = new HashMap<String, String>();
-        row8.put(FIRST_COLUMN,"217086");
-        row8.put(SECOND_COLUMN, "Wiktor Kacper Wączyński");
-        list.add(row8);
-        HashMap<String, String> row9 = new HashMap<String, String>();
-        row9.put(FIRST_COLUMN,"217086");
-        row9.put(SECOND_COLUMN, "Wiktor Kacper Wączyński");
-        list.add(row9);
-        HashMap<String, String> row10 = new HashMap<String, String>();
-        row10.put(FIRST_COLUMN,"217086");
-        row10.put(SECOND_COLUMN, "Wiktor Kacper Wączyński");
-        list.add(row10);
-        HashMap<String, String> row11 = new HashMap<String, String>();
-        row11.put(FIRST_COLUMN,"217086");
-        row11.put(SECOND_COLUMN, "Wiktor Kacper Wączyński");
-        list.add(row11);
-        HashMap<String, String> row12 = new HashMap<String, String>();
-        row12.put(FIRST_COLUMN,"217086");
-        row12.put(SECOND_COLUMN, "Wiktor Kacper Wączyński");
-        list.add(row12);
+        for(User user : users)
+        {
+            HashMap<String, String> row = new HashMap<String, String>();
+            row.put(FIRST_COLUMN, user.getEmail().split("@", 2)[0]);
+            row.put(SECOND_COLUMN, String.format("%s %s", user.getFirstName(), user.getLastName()));
+            list.add(row);
+        }
     }
 
     public void showAddResultModal(View view) {
@@ -164,13 +184,26 @@ public class ShowAssignedStudentsActivity extends AppCompatActivity {
         resultBox = new EditText(this);
         resultBox.setTag("resultBox");
         resultBox.setHint("Result");
-        resultBox.setTextColor(getResources().getColor(R.color.transparent_color));
+        resultBox.setTextColor(getResources().getColor(R.color.add_result_text_color));
         resultBox.setPadding(0, 15, 10, 25);
         resultBox.setMaxLines(1);
-        resultBox.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        resultBox.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         InputFilter lengthInputFilter = new InputFilter.LengthFilter(maxLengthResultText);
-        resultBox.setFilters(new InputFilter[] {lengthInputFilter, new DecimalDigitsInputFilter()});
+        resultBox.setFilters(new InputFilter[] {lengthInputFilter, new MinMaxInputFilter(0.0f, 5.0f)});
         modalLayout.addView(resultBox);
+
+        final TextView titleLabel = new TextView(this);
+        titleLabel.setText(getResources().getText(R.string.title_colon));
+        titleLabel.setTextColor(getResources().getColor(R.color.important_color));
+        titleLabel.setTypeface(null, Typeface.BOLD);
+        modalLayout.addView(titleLabel);
+
+        final EditText titleBox = new EditText(this);
+        titleBox.setHint("Title");
+        titleBox.setTextColor(getResources().getColor(R.color.add_result_text_color));
+        titleBox.setPadding(0, 15, 10, 25);
+        titleBox.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthTitleText)});
+        modalLayout.addView(titleBox);
 
         final TextView descriptionLabel = new TextView(this);
         descriptionLabel.setText(getResources().getText(R.string.description_colon));
@@ -183,16 +216,13 @@ public class ShowAssignedStudentsActivity extends AppCompatActivity {
         descriptionBox.setTextColor(getResources().getColor(R.color.add_result_text_color));
         descriptionBox.setPadding(0, 15, 10, 25);
         descriptionBox.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLengthDescriptionText)});
-
         modalLayout.addView(descriptionBox);
 
         builder.setView(modalLayout);
 
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-YYYY HH:mm:ss");
-
         builder.setNeutralButton(R.string.add_result, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                performAddResult(studentData.get(getResources().getString(R.string.student_id)), studentData.get(getResources().getString(R.string.student_name)), resultBox.getText().toString(), descriptionBox.getText().toString(), dateFormat.format(new Date()));
+                performAddResult(studentData.get(getResources().getString(R.string.student_id)), resultBox.getText().toString(), titleBox.getText().toString(), descriptionBox.getText().toString());
                 dialog.cancel();
             }
         });
@@ -208,7 +238,10 @@ public class ShowAssignedStudentsActivity extends AppCompatActivity {
         neutralButton.setY(150);
     }
 
-    private void performAddResult(String studentId, String studentName, String result, String description, String dateAdded) {
+    private void performAddResult(String studentId, String result, String title, String description)
+    {
+        AddResultForUserAsyncTask addResultForUserAsyncTask = new AddResultForUserAsyncTask(this);
+        addResultForUserAsyncTask.execute(studentId, title, description, result);
     }
 
     public void showResultsList(View view) {
@@ -225,28 +258,38 @@ public class ShowAssignedStudentsActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, ViewResultsActivity.class);
         Bundle extras = new Bundle();
-        extras.putSerializable("selectedClass", classObject);
+        extras.putSerializable("class", classObject);
         extras.putSerializable("selectedStudent", studentData);
         intent.putExtras(extras);
         startActivity(intent);
     }
 
-    private class DecimalDigitsInputFilter implements InputFilter {
-        Pattern mPattern;
+    public class MinMaxInputFilter implements InputFilter {
 
-        public DecimalDigitsInputFilter() {
-            mPattern = Pattern.compile("[1-6]?(\\.)?[0|5]?");
+        private float min, max;
+
+        public MinMaxInputFilter(float min, float max) {
+            this.min = min;
+            this.max = max;
+        }
+
+        public MinMaxInputFilter(String min, String max) {
+            this.min = Float.parseFloat(min);
+            this.max = Float.parseFloat(max);
         }
 
         @Override
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            Matcher matcherDot = mPattern.matcher(dest);
-            if(!matcherDot.matches()) {
-                resultBox.setTextColor(getResources().getColor(R.color.error));
-                return "";
-            }
-            resultBox.setTextColor(getResources().getColor(R.color.add_result_text_color));
-            return null;
+            try {
+                float input = Float.parseFloat(dest.toString() + source.toString());
+                if (isInRange(min, max, input))
+                    return null;
+            } catch (NumberFormatException nfe) { }
+            return "";
+        }
+
+        private boolean isInRange(float a, float b, float c) {
+            return b > a ? c >= a && c <= b : c >= b && c <= a;
         }
     }
 }

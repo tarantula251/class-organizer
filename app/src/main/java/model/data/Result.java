@@ -6,20 +6,22 @@ import java.time.LocalDateTime;
 public class Result implements Data, Serializable
 {
     private int id;
-    private double mark;
+    private double score;
+    private String title;
     private String note;
-    private LocalDateTime addedDateTime;
+    private LocalDateTime lastUpdated;
     private User student;
-    private ClassDate classDate;
+    private Class classObject;
 
-    public Result(int id, double mark, String note, LocalDateTime addedDateTime, User student, ClassDate classDate)
+    public Result(int id, double score, String title, String note, LocalDateTime lastUpdated, User student, Class classObject)
     {
         this.id = id;
-        this.mark = mark;
+        this.score = score;
+        this.title = title;
         this.note = note;
-        this.addedDateTime = addedDateTime;
+        this.lastUpdated = lastUpdated;
         this.student = student;
-        this.classDate = classDate;
+        this.classObject = classObject;
     }
 
     @Override
@@ -28,9 +30,14 @@ public class Result implements Data, Serializable
         return id;
     }
 
-    public double getMark()
+    public double getScore()
     {
-        return mark;
+        return score;
+    }
+
+    public String getTitle()
+    {
+        return title;
     }
 
     public String getNote()
@@ -38,9 +45,9 @@ public class Result implements Data, Serializable
         return note;
     }
 
-    public LocalDateTime getAddedDateTime()
+    public LocalDateTime getLastUpdated()
     {
-        return addedDateTime;
+        return lastUpdated;
     }
 
     public User getStudent()
@@ -48,8 +55,8 @@ public class Result implements Data, Serializable
         return student;
     }
 
-    public ClassDate getClassDate()
+    public Class getClassObject()
     {
-        return classDate;
+        return classObject;
     }
 }

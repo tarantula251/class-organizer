@@ -122,7 +122,6 @@ public class ViewCoursesAdapter extends RecyclerView.Adapter<ViewCoursesAdapter.
         public CourseViewHolder(@NonNull View itemView, Context context, boolean isModalAllowed, Class classObject)
         {
             super(itemView);
-            System.out.println("CourseViewHolder created!");
             contextInner = context;
             textCourseName = itemView.findViewById(R.id.courseName);
             textCycle = itemView.findViewById(R.id.cycleValue);
@@ -159,7 +158,7 @@ public class ViewCoursesAdapter extends RecyclerView.Adapter<ViewCoursesAdapter.
                     extras.putSerializable("class", classObject);
                     intent.putExtras(extras);
                     contextInner.startActivity(intent);
-                    alertDialog.hide();
+                    alertDialog.cancel();
                 }
             });
 
