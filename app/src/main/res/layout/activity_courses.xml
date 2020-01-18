@@ -7,7 +7,8 @@
     android:background="@drawable/default_background"
     tools:context=".ViewCoursesActivity">
 
-    <RelativeLayout android:id="@+id/wrapperLayout"
+    <RelativeLayout
+        android:id="@+id/wrapperLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:stateListAnimator="@null">
@@ -64,4 +65,10 @@
             android:layout_marginBottom="16dp" />
 
     </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </RelativeLayout>

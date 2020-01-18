@@ -1,5 +1,7 @@
 package model.network;
 
+import android.util.Pair;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,7 +14,10 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import model.builders.ClassFromTeacherJSONBuilder;
 import model.builders.CourseJSONBuilder;
@@ -51,6 +56,8 @@ public class Server
     private static final byte userGetForEmailId = (byte)103;
     private static final byte gradeGetForUserClass = (byte)104;
     private static final byte gradeUpdate = (byte)105;
+    private static final byte classDateAdd = (byte)106;
+    private static final byte attendanceListAdd = (byte)107;
     private static final byte facultyGetAllCode = (byte)200;
     private static final byte modelGetAllCode = (byte)201;
     private static final byte cycleGetAllCode = (byte)202;
@@ -289,7 +296,7 @@ public class Server
             requestDataJson.put("class", classObject.getId());
             sendMessage(gradeAddForUserEmailId, requestDataJson.toString());
             response = readResponse();
-            return new JSONObject(response).getInt("id");
+            return new JSONArray(response).getJSONObject(0).getInt("id");
         }
         catch(JSONException e)
         {
@@ -312,6 +319,58 @@ public class Server
             requestDataJson.put("note", description);
             requestDataJson.put("score", result);
             sendMessage(gradeUpdate, requestDataJson.toString());
+            response = readResponse();
+            ServerExceptionJSONBuilder serverExceptionJSONBuilder = new ServerExceptionJSONBuilder();
+            ServerException serverException = serverExceptionJSONBuilder.buildData(new JSONArray(response).getJSONObject(0));
+            if(serverException.getErrorCode() != 0) throw serverException;
+        }
+        catch(JSONException e)
+        {
+            throw new ServerException(e.hashCode(), "JSON couldn't be parsed");
+        }
+        catch(IOException e)
+        {
+            throw new ServerException(e.hashCode(), e.getMessage());
+        }
+    }
+
+    public int addClassDate(Class classObject) throws ServerException
+    {
+        JSONObject requestDataJson = new JSONObject();
+        String response;
+        try
+        {
+            requestDataJson.put("class", classObject.getId());
+            sendMessage(classDateAdd, requestDataJson.toString());
+            response = readResponse();
+            return new JSONArray(response).getJSONObject(0).getInt("id");
+        }
+        catch(JSONException e)
+        {
+            throw new ServerException(e.hashCode(), "JSON couldn't be parsed");
+        }
+        catch(IOException e)
+        {
+            throw new ServerException(e.hashCode(), e.getMessage());
+        }
+    }
+
+    public void addAttendanceList(ArrayList<Pair<User, Date>> attendanceList, int classDateId) throws ServerException
+    {
+        JSONArray requestDataJsonArray = new JSONArray();
+
+        String response;
+        try
+        {
+            for(Pair<User,Date> attendance : attendanceList)
+            {
+                requestDataJsonArray.put(new JSONObject()
+                        .put("user", attendance.first.getId())
+                        .put("classDate", classDateId)
+                        .put("checkInDate", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(attendance.second)));
+            }
+
+            sendMessage(attendanceListAdd, requestDataJsonArray.toString());
             response = readResponse();
             ServerExceptionJSONBuilder serverExceptionJSONBuilder = new ServerExceptionJSONBuilder();
             ServerException serverException = serverExceptionJSONBuilder.buildData(new JSONArray(response).getJSONObject(0));

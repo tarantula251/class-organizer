@@ -22,6 +22,8 @@
     <string name="submit">Submit</string>
     <string name="close">Close</string>
     <string name="show_more">Show more</string>
+    <string name="register_student_message">Approximate phone to your teacher\'s phone...</string>
+    <string name="register_student_title">Register attendance</string>
     <string name="register_modal_success">Thank you! Your registration has been successfully processed!</string>
     <string name="register_modal_error">Oops... Something went wrong. Check your Internet connection and try again.</string>
     <string name="attendance_list_success">Attendance list for selected class has just opened!</string>
@@ -31,7 +33,9 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <!-- Menu -->
+    <string name="menu_register_attendance">Register Attendance</string>
     <string name="menu_manage_attendance">Manage Attendance</string>
+    <string name="menu_open_attendance">Open Attendance List</string>
     <string name="menu_view_courses">Manage Courses</string>
     <string name="menu_manage_results">Manage Results</string>
     <string name="menu_my_account">My Account</string>

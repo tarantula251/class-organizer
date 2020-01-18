@@ -4,6 +4,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-feature android:name="android.hardware.nfc" android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -27,6 +29,13 @@
                 android:value=".ViewCoursesActivity" />
         </activity>
         <activity
+            android:name=".AuthorizedUserBeam"
+            android:parentActivityName=".MenuActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MenuActivity" />
+        </activity>
+        <activity
             android:name=".AccountActivity"
             android:parentActivityName=".MenuActivity">
             <meta-data
@@ -35,13 +44,6 @@
         </activity>
         <activity
             android:name=".ViewCoursesActivity"
-            android:parentActivityName=".MenuActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MenuActivity" />
-        </activity>
-        <activity
-            android:name=".AttendanceActivity"
             android:parentActivityName=".MenuActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
